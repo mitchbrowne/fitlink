@@ -30,7 +30,10 @@ export default (props) => {
       photoURL: photoURL
     }).then(function() {
       // Update successful
+      setError('Changes saved!')
       console.log('Profile changes updated successfully.');
+      window.location.reload(false);
+      props.fetchUpdatedUser(user)
     }).catch(function(error) {
       // An error happened
       const errorMessage = error.message;

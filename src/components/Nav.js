@@ -1,16 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
 
 import {
   Navbar,
   Nav,
-  NavDropdown
+  NavDropdown,
+  Image
 } from 'react-bootstrap';
 
 export default (props) => {
 
-  const user = firebase.auth().currentUser;
+  const user = props.user;
+
+  // const [displayName, setDisplayName] = useState('');
+  // const [photoURL, setPhotoURL] = useState('');
+
+  useEffect(() => {
+    if (props.user === null) return;
+    console.log('changing with user effect');
+    // setDisplayName(props.user.displayName);
+    // setPhotoURL(props.user.photoURL);
+  }, [props]);
 
   const _handleSignOut = (props) => {
     firebase.auth().signOut().then(function() {
@@ -37,7 +48,16 @@ export default (props) => {
           <Nav className="justify-content-end">
             {user
               ? <>
-              <NavDropdown title={user.email} id="nav-dropdown">
+              <NavDropdown
+                  alignRight
+                  title={
+                    <span>
+                      {props.user.displayName}
+                      <Image src={`${props.user.photoURL}`} className="navbar-photoURL" roundedCircle />
+                    </span>
+                  }
+                  id="nav-dropdown"
+              >
                 <NavDropdown.Item as={Link} to="/postworkout">Post Workout</NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/myprofile">My Profile</NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/settings">Settings</NavDropdown.Item>

@@ -25,9 +25,15 @@ export default (props) => {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
       firebase.auth().currentUser.updateProfile({
         displayName: displayName,
-        photoURL: `https://api.adorable.io/avatars/290/{email}.png`
-      }).then(() => {console.log('User added.');}).catch((error) => {console.log('User not added.');})
-      props.history.push('/');
+        photoURL: `https://api.adorable.io/avatars/290/${email}.png`
+      }).then(() => {
+        console.log('User added.');
+        props.history.push('/');
+      }).catch((error) => {
+        console.log('User not added.');
+        let errorMessage = error.message;
+        return setError(errorMessage);
+      })
     }).catch(function(error) {
       let errorCode = error.code;
       let errorMessage = error.message;

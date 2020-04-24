@@ -17,11 +17,18 @@ export default () => {
     if (user) {
       setUser(user);
       console.log(user.email);
+      console.log('user state change');
     } else {
       setUser(null)
       console.log('No user signed in on state change');
     }
   })
+
+  const _fetchUpdatedUser = (user) => {
+    setUser(user)
+    console.log(user.displayName);
+    console.log('updated user');
+  }
 
   return (
     <Router>
@@ -31,14 +38,14 @@ export default () => {
             exact
             path="/"
             render={(props) => (
-              <Home user={user} />
+              <Home {...props} user={user} />
             )}
           />
           <Route
             exact
             path="/settings"
             render={(props) => (
-              <Settings user={user} />
+              <Settings {...props} user={user} fetchUpdatedUser={_fetchUpdatedUser}/>
             )}
              />
           <Route exact path="/signup" component={Signup} />

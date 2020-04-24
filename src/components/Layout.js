@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Component, useEffect} from 'react';
 
 import Nav from './Nav';
 
 export default (props) => {
   return (
     <div>
-      <Nav user={props.user}/>
+      <Nav {...props} user={props.user}/>
       {props.children}
     </div>
   )
