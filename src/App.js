@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import Layout from './components/Layout';
 
 import Home from './pages/Home';
+import Settings from './pages/Settings';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 
@@ -25,7 +26,7 @@ export default () => {
   return (
     <Router>
       <div>
-        <Layout >
+        <Layout user={user}>
           <Route
             exact
             path="/"
@@ -33,6 +34,13 @@ export default () => {
               <Home user={user} />
             )}
           />
+          <Route
+            exact
+            path="/settings"
+            render={(props) => (
+              <Settings user={user} />
+            )}
+             />
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/signin" component={Signin} />
         </Layout>

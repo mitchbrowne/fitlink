@@ -11,6 +11,7 @@ import {
 } from 'react-bootstrap'
 
 export default (props) => {
+  const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -22,6 +23,10 @@ export default (props) => {
       return setError('Password does not match confirmation password.')
     }
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
+      firebase.auth().currentUser.updateProfile({
+        displayName: displayName,
+        photoURL: `https://api.adorable.io/avatars/290/{email}.png`
+      }).then(() => {console.log('User added.');}).catch((error) => {console.log('User not added.');})
       props.history.push('/');
     }).catch(function(error) {
       let errorCode = error.code;
@@ -47,6 +52,14 @@ export default (props) => {
         <Row className="justify-content-md-center">
           <Col md="6">
             <Form onSubmit={_handleSubmit}>
+              <Form.Group controlId="displayName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => {setDisplayName(e.target.value)}}
+                 />
+              </Form.Group>
               <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control

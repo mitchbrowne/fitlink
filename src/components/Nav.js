@@ -4,10 +4,14 @@ import firebase from 'firebase';
 
 import {
   Navbar,
-  Nav
+  Nav,
+  NavDropdown
 } from 'react-bootstrap';
 
 export default (props) => {
+
+  const user = firebase.auth().currentUser;
+
   const _handleSignOut = (props) => {
     firebase.auth().signOut().then(function() {
       // sign out successfull
@@ -31,9 +35,21 @@ export default (props) => {
             <Nav.Link as={Link} to="/">Home</Nav.Link>
           </Nav>
           <Nav className="justify-content-end">
-            <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
-            <Nav.Link as={Link} to="/signin">Sign In</Nav.Link>
-            <Nav.Link as={Link} to="/" onClick={_handleSignOut}>Sign Out</Nav.Link>
+            {user
+              ? <>
+              <NavDropdown title={user.email} id="nav-dropdown">
+                <NavDropdown.Item as={Link} to="/postworkout">Post Workout</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/myprofile">My Profile</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/settings">Settings</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item as={Link} to="/" onClick={_handleSignOut}>Sign Out</NavDropdown.Item>
+              </NavDropdown>
+              </>
+              : <>
+                <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
+                <Nav.Link as={Link} to="/signin">Sign In</Nav.Link>
+              </>
+            }
           </Nav>
         </Navbar.Collapse>
       </Navbar>

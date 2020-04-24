@@ -5,7 +5,7 @@ import Nav from './Nav';
 export default (props) => {
   return (
     <div>
-      <Nav />
+      <Nav user={props.user}/>
       {props.children}
     </div>
   )
