@@ -11,10 +11,10 @@ import {
 } from 'react-bootstrap'
 
 export default (props) => {
-  const [displayName, setDisplayName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [displayName, setDisplayName] = useState('Mitch');
+  const [email, setEmail] = useState('mfbrowne18@gmail.com');
+  const [password, setPassword] = useState('chicken');
+  const [confirmPassword, setConfirmPassword] = useState('chicken');
   const [error, setError] = useState('');
 
   const _handleSubmit = (e) => {
@@ -22,24 +22,58 @@ export default (props) => {
     if (password !== confirmPassword) {
       return setError('Password does not match confirmation password.')
     }
-    firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
+
+    // firebase.auth().createUser({
+    //   email: email,
+    //   password: password,
+    //   displayName: displayName,
+    //   photoURL: `https://api.adorable.io/avatars/290/${email}.png`
+    // }).then(function(userRecord) {
+    //   console.log('Successfully created new user:', userRecord.uid);
+    //           props.history.push('/');
+    // }).catch(function(error) {
+    //   console.log('Error creating new user:', error.message);
+    //   return setError(error.message);
+    // })
+
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
+
+      // props.addUsertoDB(user.uid, email, displayName, `https://api.adorable.io/avatars/290/${email}.png`);
       firebase.auth().currentUser.updateProfile({
         displayName: displayName,
         photoURL: `https://api.adorable.io/avatars/290/${email}.png`
       }).then(() => {
-        console.log('User added.');
-        props.history.push('/');
+
+        console.log("user: ", user);
+        const db = firebase.firestore();
+        const usersRef = db.collection('users');
+
+        usersRef.doc(user.user.uid).set({
+          email: user.user.email,
+          displayName: user.user.displayName,
+          photoURL: `https://api.adorable.io/avatars/290/${user.user.email}.png`
+        })
+
+      }).then(() => {
+        // console.log('User added.');
+        // props.history.push('/');
+        // window.location.reload(false);
       }).catch((error) => {
         console.log('User not added.');
         let errorMessage = error.message;
         return setError(errorMessage);
       })
+
+
+    }).then(() => {
+      props.history.push('/');
     }).catch(function(error) {
       let errorCode = error.code;
       let errorMessage = error.message;
       console.log(errorMessage);
       return setError(errorMessage);
     });
+
   }
 
   return (

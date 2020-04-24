@@ -32,7 +32,6 @@ export default (props) => {
       // Update successful
       setError('Changes saved!')
       console.log('Profile changes updated successfully.');
-      window.location.reload(false);
       props.fetchUpdatedUser(user)
     }).catch(function(error) {
       // An error happened
