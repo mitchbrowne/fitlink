@@ -7,6 +7,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
+import PostWorkout from './pages/PostWorkout';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 
@@ -20,7 +21,7 @@ export default class App extends Component {
     }
 
     this._fetchUpdatedUser = this._fetchUpdatedUser.bind(this);
-    this._addUserToDB = this._addUserToDB.bind(this);
+
   }
 
   componentDidMount() {
@@ -39,21 +40,6 @@ export default class App extends Component {
         console.log('No user signed in on state change');
       }
     })
-  }
-
-
-  _addUserToDB = (userID, email, displayName, photoURL) => {
-    console.log(userID);
-    this.state.usersRef.doc(userID).set({
-      email: email,
-      displayName: displayName,
-      photoURL: photoURL
-    }).then(function() {
-      this.props.history.push('/');
-      window.location.reload(false);
-    }).catch(function() {
-
-    });
   }
 
   _fetchUpdatedUser = (user) => {
@@ -91,9 +77,16 @@ export default class App extends Component {
             />
             <Route
               exact
+              path="/postworkout"
+              render={(props) => (
+                <PostWorkout {...props} user={this.state.user} />
+              )}
+            />
+            <Route
+              exact
               path="/signup"
               render={(props) => (
-                <Signup {...props} addUsertoDB={this._addUserToDB} />
+                <Signup {...props}/>
               )}
             />
             <Route exact path="/signin" component={Signin} />

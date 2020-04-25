@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import firebase from 'firebase';
+import { signIn } from '../helpers/fireUtils';
 
 import {
   Container,
@@ -11,19 +11,17 @@ import {
 } from 'react-bootstrap'
 
 export default (props) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('mfbrowne18@gmail.com');
+  const [password, setPassword] = useState('chicken');
   const [error, setError] = useState('');
 
-  const _handleSubmit = (e) => {
+  const _handleSubmit = async (e) => {
     e.preventDefault();
 
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-      props.history.push('/');
-    }).catch(function(error) {
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      return setError(errorMessage);
+    await signIn(email, password).then(() => {
+      props.history.push('/')
+    }).catch((error) => {
+      setError(error.message);
     });
   }
 
@@ -64,7 +62,6 @@ export default (props) => {
                   Sign In
                 </Button>
               </div>
-
             </Form>
             <div className="text-center">
               <Link to="/signup">

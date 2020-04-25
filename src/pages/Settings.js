@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import firebase from 'firebase';
+import { updateSettings } from '../helpers/fireUtils';
 
 import {
   Container,
@@ -22,22 +23,14 @@ export default (props) => {
     setPhotoURL(props.user.photoURL);
   }, [props])
 
-  const _handleSubmit = (e) => {
+  const _handleSubmit = async (e) => {
     e.preventDefault();
 
-    user.updateProfile({
-      displayName: displayName,
-      photoURL: photoURL
-    }).then(function() {
-      // Update successful
-      setError('Changes saved!')
-      console.log('Profile changes updated successfully.');
-      props.fetchUpdatedUser(user)
-    }).catch(function(error) {
-      // An error happened
-      const errorMessage = error.message;
-      setError(errorMessage);
-      console.log('Profile changes not updated.');
+    await updateSettings(user, displayName, photoURL).then(() => {
+      setError('Changes saved!');
+      props.fetchUpdatedUser(user);
+    }).catch((error) => {
+      setError(error.message);
     })
   }
 
