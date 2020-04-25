@@ -7,7 +7,8 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
-import PostWorkout from './pages/PostWorkout';
+import NewWorkout from './pages/NewWorkout';
+import ShowWorkout from './pages/ShowWorkout';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 
@@ -75,11 +76,18 @@ export default class App extends Component {
                 <Profile {...props} user={this.state.user} />
               )}
             />
+
             <Route
               exact
-              path="/postworkout"
+              path="/workouts/new"
               render={(props) => (
-                <PostWorkout {...props} user={this.state.user} />
+                <NewWorkout {...props} user={this.state.user} />
+              )}
+            />
+            <Route
+              path="/workouts/show/:workoutId"
+              render={(props) => (
+                <ShowWorkout {...props} user={this.state.user} />
               )}
             />
             <Route

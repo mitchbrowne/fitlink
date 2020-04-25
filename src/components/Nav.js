@@ -59,7 +59,7 @@ export default (props) => {
                   }
                   id="nav-dropdown"
               >
-                <NavDropdown.Item as={Link} to="/postworkout">Post Workout</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/workouts/new">Post Workout</NavDropdown.Item>
                 <NavDropdown.Item as={Link} to={`/profile/${user.uid}`}>My Profile</NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/settings">Settings</NavDropdown.Item>
                 <NavDropdown.Divider />

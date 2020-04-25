@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import InputTag from '../components/InputTag';
+import { postWorkout } from '../helpers/fireUtils';
 
 import {
   Container,
@@ -11,15 +12,29 @@ import {
 
 export default (props) => {
   const [error, setError] = useState('');
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
-  const [image, setImage] = useState('');
+  const [title, setTitle] = useState('Big Hiit');
+  const [desc, setDesc] = useState('Really good hiit class by my fav instructor! Check out the link');
+  const [image, setImage] = useState('https://i.ytimg.com/vi/JkVHrA5o23o/maxresdefault.jpg');
   const [hashtags, setHashtags] = useState('');
   const [friends, setFriends] = useState('');
-  const [link, setLink] = useState('');
+  const [link, setLink] = useState('https://www.youtube.com/watch?v=JkVHrA5o23o');
 
-  const _handleSubmit = (e) => {
+  const _handleSubmit = async (e) => {
     e.preventDefault();
+
+    const postDetails = {
+      userId: props.user.uid,
+      title: title,
+      desc: desc,
+      image: image,
+      link: link
+    }
+
+    const docRef = await postWorkout(postDetails);
+
+    console.log('docRefId: ', docRef.id);
+    props.history.push(`/workouts/show/${docRef.id}`);
+
   }
 
   return (
@@ -76,10 +91,9 @@ export default (props) => {
               </Form.Group>
               <div className="text-center">
                 <Button variant="primary" type="submit">
-                  Post
+                  Post Workout
                 </Button>
               </div>
-
             </Form>
           </Col>
         </Row>
