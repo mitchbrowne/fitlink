@@ -24,6 +24,7 @@ export default (props) => {
 
     const postDetails = {
       userId: props.user.uid,
+      displayName: props.user.displayName,
       title: title,
       desc: desc,
       image: image,

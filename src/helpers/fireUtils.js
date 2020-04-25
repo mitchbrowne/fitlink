@@ -10,6 +10,7 @@ export const postWorkout = async (postDetails) => {
   // use .add() if no doc exists, and then callback provides the docRef
   return await postsRef.add({
     userId: postDetails.userId,
+    displayName: postDetails.displayName,
     title: postDetails.title,
     desc: postDetails.desc,
     image: postDetails.image,
@@ -30,6 +31,26 @@ export const postWorkout = async (postDetails) => {
     console.log('Unsuccessful post');
   })
 
+}
+
+export const getPost = async (postId) => {
+  const db = firebase.firestore();
+  const postRef = db.collection('posts').doc(postId);
+  return await postRef.get();
+}
+
+export const getUserPosts = async (userId) => {
+  const db = firebase.firestore();
+  const userPostsRef = db.collection('users').doc(userId).collection('posts').orderBy('createdAt');
+
+  return await userPostsRef.get().then(posts => {
+    let allPosts = [];
+    posts.forEach(doc => {
+      console.log(doc.id);
+      allPosts.push(doc);
+    });
+    return allPosts;
+  });
 }
 
 export const getUser = async (userId) => {
