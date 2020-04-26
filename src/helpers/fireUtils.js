@@ -41,7 +41,7 @@ export const getPost = async (postId) => {
 
 export const getUserPosts = async (userId) => {
   const db = firebase.firestore();
-  const userPostsRef = db.collection('users').doc(userId).collection('posts').orderBy('createdAt');
+  const userPostsRef = db.collection('users').doc(userId).collection('posts').orderBy('createdAt', 'desc');
 
   return await userPostsRef.get().then(posts => {
     let allPosts = [];
@@ -60,7 +60,9 @@ export const getUser = async (userId) => {
   return await userRef.get();
 }
 
-export const updateSettings = async (user, displayName, photoURL) => {
+export const updateSettings = async (email, displayName, bio, photoURL) => {
+  const user = firebase.auth().currentUser;
+
   await user.updateProfile({
     displayName: displayName,
     photoURL: photoURL
@@ -69,7 +71,37 @@ export const updateSettings = async (user, displayName, photoURL) => {
   }).catch(function(error) {
     return error.message;
   })
+
+  const db = firebase.firestore();
+  const userRef = db.collection('users').doc(user.uid);
+
+  await userRef.set({
+    email: email,
+    displayName: displayName,
+    bio: bio,
+    photoURL: photoURL
+  }).then(function() {
+    console.log("Updated Bio and stuff");
+  }).catch(function(error) {
+    return error.message;
+  })
 }
+
+// export const getSignedInUser = async () => {
+//   const db = firebase.firestore();
+//   const usersRef = db.collection('users');
+//
+//   let user = await firebase.auth().onAuthStateChanged(async (userProfile) => {
+//     // let user;
+//     if (!userProfile){
+//       console.log('No user signed in on state change');
+//       return null;
+//     }
+//     let user = await getUser(userProfile.uid);
+//     console.log(user.data());
+//     return user;
+//   })
+// }
 
 export const signIn = async (email, password) => {
   await firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
@@ -95,6 +127,7 @@ export const signUp = async (email, password, displayName) => {
           usersRef.doc(user.user.uid).set({
             email: user.user.email,
             displayName: user.user.displayName,
+            bio: '',
             photoURL: `https://api.adorable.io/avatars/290/${user.user.email}.png`
           })
 

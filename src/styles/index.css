@@ -17,3 +17,11 @@ code {
   height:40px;
   margin-left: 1em;
 }
+
+.profile-post-image {
+  width: 20vw;
+}
+
+.profile-image {
+  width: 150px;
+}

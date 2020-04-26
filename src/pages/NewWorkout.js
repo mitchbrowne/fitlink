@@ -12,12 +12,19 @@ import {
 
 export default (props) => {
   const [error, setError] = useState('');
-  const [title, setTitle] = useState('Big Hiit');
-  const [desc, setDesc] = useState('Really good hiit class by my fav instructor! Check out the link');
-  const [image, setImage] = useState('https://i.ytimg.com/vi/JkVHrA5o23o/maxresdefault.jpg');
+  const [title, setTitle] = useState('');
+  const [desc, setDesc] = useState('');
+  const [image, setImage] = useState('');
   const [hashtags, setHashtags] = useState('');
   const [friends, setFriends] = useState('');
-  const [link, setLink] = useState('https://www.youtube.com/watch?v=JkVHrA5o23o');
+  const [link, setLink] = useState('');
+  // const [error, setError] = useState('');
+  // const [title, setTitle] = useState('Big Hiit');
+  // const [desc, setDesc] = useState('Really good hiit class by my fav instructor! Check out the link');
+  // const [image, setImage] = useState('https://i.ytimg.com/vi/JkVHrA5o23o/maxresdefault.jpg');
+  // const [hashtags, setHashtags] = useState('');
+  // const [friends, setFriends] = useState('');
+  // const [link, setLink] = useState('https://www.youtube.com/watch?v=JkVHrA5o23o');
 
   const _handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +64,7 @@ export default (props) => {
               <Form.Group controlId="title">
                 <Form.Label>Workout Name</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   value={title}
                   onChange={(e) => {setTitle(e.target.value)}}
@@ -73,6 +81,7 @@ export default (props) => {
               <Form.Group controlId="image">
                 <Form.Label>Add Image</Form.Label>
                 <Form.Control
+                  required
                   type="url"
                   value={image}
                   onChange={(e) => {setImage(e.target.value)}}
@@ -81,6 +90,7 @@ export default (props) => {
               <Form.Group controlId="link">
                 <Form.Label>Link to Workout Video</Form.Label>
                 <Form.Control
+                  required
                   type="url"
                   value={link}
                   onChange={(e) => {setLink(e.target.value)}}

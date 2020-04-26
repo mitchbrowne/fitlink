@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import firebase from 'firebase';
+import { getUser } from './helpers/fireUtils';
 
 import Layout from './components/Layout';
 
@@ -18,35 +19,51 @@ export default class App extends Component {
     super(props);
     this.state = {
       user: null,
-      usersRef: null
     }
 
     this._fetchUpdatedUser = this._fetchUpdatedUser.bind(this);
 
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const db = firebase.firestore();
     const usersRef = db.collection('users');
-    this.setState({usersRef: usersRef});
 
-    firebase.auth().onAuthStateChanged((user) => {
-
-      if (user){
-        this.setState({user: user});
-        console.log(user.email);
-        console.log('user state change');
-      } else {
-        this.setState({user: null})
+    await firebase.auth().onAuthStateChanged(async (userProfile) => {
+      if (!userProfile){
         console.log('No user signed in on state change');
+        return null;
       }
+      const user = await getUser(userProfile.uid);
+      console.log(user.data());
+      this.setState({user: user.data()});
     })
+
+    // const user = await getSignedInUser().then((user) => {
+    //   console.log("HEY");
+    //   console.log(user);
+    // });
+    // console.log(user);
+
+    // const db = firebase.firestore();
+    // const usersRef = db.collection('users');
+    //
+    // await firebase.auth().onAuthStateChanged((user) => {
+    //   if (user){
+    //     const userDetails = getUser(user.uid);
+    //     this.setState({user: userDetails});
+    //     console.log(userDetails);
+    //     console.log('user state change');
+    //   } else {
+    //     this.setState({user: null})
+    //     console.log('No user signed in on state change');
+    //   }
+    // })
   }
 
   _fetchUpdatedUser = (user) => {
-    this.setState({user: user})
-    console.log(user.displayName);
-    console.log('updated user');
+    this.setState({user: user});
+    console.log(user);
   }
 
   render() {

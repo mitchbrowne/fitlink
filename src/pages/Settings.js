@@ -7,28 +7,36 @@ import {
   Row,
   Col,
   Form,
-  Button
+  Button,
+  Image
 } from 'react-bootstrap';
 
 export default (props) => {
   const user = props.user;
 
   const [displayName, setDisplayName] = useState('');
+  const [bio, setBio] = useState('');
   const [photoURL, setPhotoURL] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (props.user === null) return;
     setDisplayName(props.user.displayName);
+    setBio(props.user.bio);
     setPhotoURL(props.user.photoURL);
   }, [props])
 
   const _handleSubmit = async (e) => {
     e.preventDefault();
-
-    await updateSettings(user, displayName, photoURL).then(() => {
+    await updateSettings(user.email, displayName, bio, photoURL).then(() => {
       setError('Changes saved!');
-      props.fetchUpdatedUser(user);
+      const updatedUser = {
+        email: user.email,
+        displayName: displayName,
+        bio: bio,
+        photoURL: photoURL
+      }
+      props.fetchUpdatedUser(updatedUser);
     }).catch((error) => {
       setError(error.message);
     })
@@ -70,8 +78,17 @@ export default (props) => {
                   onChange={(e) => {setDisplayName(e.target.value)}}
                  />
               </Form.Group>
+              <Form.Group controlId="bio">
+                <Form.Label>Bio</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={bio ? bio : ''}
+                  onChange={(e) => {setBio(e.target.value)}}
+                 />
+              </Form.Group>
               <Form.Group controlId="photoURL">
                 <Form.Label>Profile Picture</Form.Label>
+                <Image src={photoURL} alt="profile picture" className="block" roundedCircle/>
                 <Form.Control
                   type="url"
                   value={photoURL ? photoURL : ''}
