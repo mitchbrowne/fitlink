@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from 'firebase';
 import firestore from '../firestore';
 
-export const postWorkout = async (postDetails) => {
+export const newPost = async (postDetails) => {
 
   const db = firebase.firestore();
   const postsRef = db.collection('posts')
@@ -24,8 +24,37 @@ export const postWorkout = async (postDetails) => {
       title: postDetails.title,
       image: postDetails.image,
       createdAt: firebase.firestore.Timestamp.fromDate(new Date())
+    }).then(() => {
+      db.collection('users').doc(postDetails.userId).set({
+        postsCount: (postDetails.postsCount + 1)
+      }, {merge: true});
     });
     return docRef;
+
+  }).catch((error) => {
+    console.log('Unsuccessful post');
+  })
+
+}
+
+export const editPost = async (postDetails) => {
+
+  const db = firebase.firestore();
+  const postRef = db.collection('posts').doc(postDetails.postId);
+
+  return await postRef.set({
+    title: postDetails.title,
+    desc: postDetails.desc,
+    image: postDetails.image,
+    link: postDetails.link,
+  }, {merge: true}).then(() => {
+    console.log('Successful post');
+
+    const userRef = db.collection('users').doc(postDetails.userId).collection('posts').doc(postDetails.postId);
+    userRef.set({
+      title: postDetails.title,
+      image: postDetails.image,
+    }, {merge: true});
 
   }).catch((error) => {
     console.log('Unsuccessful post');
@@ -80,28 +109,12 @@ export const updateSettings = async (email, displayName, bio, photoURL) => {
     displayName: displayName,
     bio: bio,
     photoURL: photoURL
-  }).then(function() {
+  }, {merge: true}).then(function() {
     console.log("Updated Bio and stuff");
   }).catch(function(error) {
     return error.message;
   })
 }
-
-// export const getSignedInUser = async () => {
-//   const db = firebase.firestore();
-//   const usersRef = db.collection('users');
-//
-//   let user = await firebase.auth().onAuthStateChanged(async (userProfile) => {
-//     // let user;
-//     if (!userProfile){
-//       console.log('No user signed in on state change');
-//       return null;
-//     }
-//     let user = await getUser(userProfile.uid);
-//     console.log(user.data());
-//     return user;
-//   })
-// }
 
 export const signIn = async (email, password) => {
   await firebase.auth().signInWithEmailAndPassword(email, password).then(function() {

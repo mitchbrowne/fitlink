@@ -17,39 +17,39 @@ export default class Profile extends Component {
     super(props);
     this.state = {
       userId: props.match.params.userId,
-      user: {
-        displayName: 'Mitch',
-        bio: 'Healthy mind and body',
-        photoURL: `https://api.adorable.io/avatars/290/mfbrowne18@gmail.com.png`,
-        followingCount: 10,
-        followersCount: 12,
-      },
-      // user: null,
+      // user: {
+      //   displayName: 'Mitch',
+      //   bio: 'Healthy mind and body',
+      //   photoURL: `https://api.adorable.io/avatars/290/mfbrowne18@gmail.com.png`,
+      //   followingCount: 10,
+      //   followersCount: 12,
+      // },
+      userProfile: null,
       posts: null
     }
   }
 
   async componentDidMount() {
-    // const user = await getUser(this.state.userId).then((user) => {
-    //   console.log('Successfully fetched user data.');
-    //   this.setState({user: user.data()});
-    // }).catch((error) => {
-    //   console.log('Unsuccessfully fetched user data.');
-    // });
+    const userProfile = await getUser(this.state.userId).then((userProfile) => {
+      console.log('Successfully fetched user data.');
+      this.setState({userProfile: userProfile.data()});
+    }).catch((error) => {
+      console.log('Unsuccessfully fetched user data.');
+    });
 
-    // console.log('Mounted.');
-    // const posts = await getUserPosts(this.state.userId);
-    // this.setState({posts: posts})
+    console.log('Mounted.');
+    const posts = await getUserPosts(this.state.userId);
+    this.setState({posts: posts})
   }
 
   render() {
-    // if (this.state.user === null || this.state.posts === null) return (<p>Loading Profile...</p>);
+    if (this.state.userProfile === null || this.state.posts === null) return (<p>Loading Profile...</p>);
 
     return (
       <div>
         <Container className="justify-content-md-center">
-          <UserProfileHeader user={this.state.user}/>
-          {/* <UserProfilePosts posts={this.state.posts}/> */}
+          <UserProfileHeader userProfile={this.state.userProfile}/>
+          <UserProfilePosts posts={this.state.posts}/>
         </Container>
       </div>
 
@@ -62,17 +62,20 @@ const UserProfileHeader = (props) => {
     <div>
       <Row md="6" className="justify-content-md-center">
         <Col xs lg="2">
-          <Image src={props.user.photoURL} roundedCircle alt="user profile image" className="profile-image"/>
+          <Image src={props.userProfile.photoURL} roundedCircle alt="user profile image" className="profile-image"/>
         </Col>
         <Col xs lg="4" className="justify-content-md-center">
-          <h1>{props.user.displayName}</h1>
-          <h4>{props.user.bio}</h4>
+          <h1>{props.userProfile.displayName}</h1>
+          <h4>{props.userProfile.bio}</h4>
           <Row>
             <Col>
-              <p>{props.user.followingCount} Following</p>
+              <p>{props.userProfile.followingCount} Following</p>
             </Col>
             <Col>
-              <p>{props.user.followersCount} Followers</p>
+              <p>{props.userProfile.followersCount} Followers</p>
+            </Col>
+            <Col>
+              <p>{props.userProfile.postsCount} Posts</p>
             </Col>
           </Row>
         </Col>
@@ -87,7 +90,7 @@ const UserProfilePosts = (props) => {
   console.log(props.posts);
   const userPosts = props.posts.map((post) => {
     const p = post.data();
-
+    console.log(p);
     return (
         <Col lg={4} key={post.id}>
           <div>

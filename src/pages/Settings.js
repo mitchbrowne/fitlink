@@ -31,11 +31,13 @@ export default (props) => {
     await updateSettings(user.email, displayName, bio, photoURL).then(() => {
       setError('Changes saved!');
       const updatedUser = {
+        userId: user.userId,
         email: user.email,
         displayName: displayName,
         bio: bio,
         photoURL: photoURL
       }
+      console.log(updatedUser);
       props.fetchUpdatedUser(updatedUser);
     }).catch((error) => {
       setError(error.message);
@@ -97,7 +99,7 @@ export default (props) => {
               </Form.Group>
               <div className="text-center">
                 <Button variant="primary" type="submit">
-                  Make Changes
+                  Save Changes
                 </Button>
               </div>
 

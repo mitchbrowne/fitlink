@@ -10,6 +10,7 @@ import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import NewWorkout from './pages/NewWorkout';
 import ShowWorkout from './pages/ShowWorkout';
+import EditWorkout from './pages/EditWorkout';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 
@@ -31,34 +32,24 @@ export default class App extends Component {
 
     await firebase.auth().onAuthStateChanged(async (userProfile) => {
       if (!userProfile){
+        this.setState({user: null});
         console.log('No user signed in on state change');
         return null;
       }
-      const user = await getUser(userProfile.uid);
-      console.log(user.data());
-      this.setState({user: user.data()});
+      const userDetails = await getUser(userProfile.uid);
+      console.log(userDetails.data());
+
+      const user = {
+        userId: userProfile.uid,
+        postsCount: userDetails.data().postsCount,
+        email: userDetails.data().email,
+        displayName: userDetails.data().displayName,
+        bio: userDetails.data().bio,
+        photoURL: userDetails.data().photoURL
+      }
+      console.log(user);
+      this.setState({user: user});
     })
-
-    // const user = await getSignedInUser().then((user) => {
-    //   console.log("HEY");
-    //   console.log(user);
-    // });
-    // console.log(user);
-
-    // const db = firebase.firestore();
-    // const usersRef = db.collection('users');
-    //
-    // await firebase.auth().onAuthStateChanged((user) => {
-    //   if (user){
-    //     const userDetails = getUser(user.uid);
-    //     this.setState({user: userDetails});
-    //     console.log(userDetails);
-    //     console.log('user state change');
-    //   } else {
-    //     this.setState({user: null})
-    //     console.log('No user signed in on state change');
-    //   }
-    // })
   }
 
   _fetchUpdatedUser = (user) => {
@@ -102,9 +93,15 @@ export default class App extends Component {
               )}
             />
             <Route
-              path="/workouts/show/:workoutId"
+              path="/workouts/show/:postId"
               render={(props) => (
                 <ShowWorkout {...props} user={this.state.user} />
+              )}
+            />
+            <Route
+              path="/workouts/edit/:postId"
+              render={(props) => (
+                <EditWorkout {...props} user={this.state.user} />
               )}
             />
             <Route

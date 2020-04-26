@@ -60,9 +60,8 @@ export default (props) => {
                   id="nav-dropdown"
               >
                 <NavDropdown.Item as={Link} to="/workouts/new">Post Workout</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to={`/profile/${user.uid}`}>Profile</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to={`/profile/${user.userId}`}>Profile</NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/settings">Settings</NavDropdown.Item>
-                <NavDropdown.Divider />
                 <NavDropdown.Item as={Link} to="/" onClick={_handleSignOut}>Sign Out</NavDropdown.Item>
               </NavDropdown>
               </>

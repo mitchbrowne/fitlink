@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InputTag from '../components/InputTag';
-import { newPost } from '../helpers/fireUtils';
+import { getPost, editPost } from '../helpers/fireUtils';
 
 import {
   Container,
@@ -12,6 +12,7 @@ import {
 
 export default (props) => {
   const [error, setError] = useState('');
+  const [postId, setPostId] = useState(props.match.params.postId);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [image, setImage] = useState('');
@@ -19,23 +20,38 @@ export default (props) => {
   const [friends, setFriends] = useState('');
   const [link, setLink] = useState('');
 
+  useEffect(() => {
+    if (props.user === null) return;
+    const getPostAPI = async () => {
+      const postData = await getPost(postId);
+      console.log(postData.data());
+      let post = postData.data();
+      setTitle(post.title);
+      setDesc(post.desc);
+      setImage(post.image);
+      setLink(post.link);
+    }
+
+    getPostAPI();
+
+  }, [props]);
+
   const _handleSubmit = async (e) => {
     e.preventDefault();
 
     const postDetails = {
+      postId: postId,
       userId: props.user.userId,
-      postsCount: props.user.postsCount,
-      displayName: props.user.displayName,
       title: title,
       desc: desc,
       image: image,
       link: link
     }
+    console.log(postDetails);
 
-    const docRef = await newPost(postDetails);
+    const docRef = await editPost(postDetails);
 
-    console.log('docRefId: ', docRef.id);
-    props.history.push(`/workouts/show/${docRef.id}`);
+    props.history.push(`/workouts/show/${postId}`);
 
   }
 
@@ -44,7 +60,7 @@ export default (props) => {
       <Container>
         <Row className="justify-content-md-center">
           <Col md="2">
-            <h1>Post Workout</h1>
+            <h1>Edit Workout</h1>
           </Col>
         </Row>
         <Row className="justify-content-md-center">
@@ -73,7 +89,7 @@ export default (props) => {
                  />
               </Form.Group>
               <Form.Group controlId="image">
-                <Form.Label>Add Image</Form.Label>
+                <Form.Label>Edit Image</Form.Label>
                 <Form.Control
                   required
                   type="url"
@@ -96,7 +112,7 @@ export default (props) => {
               </Form.Group>
               <div className="text-center">
                 <Button variant="primary" type="submit">
-                  Post Workout
+                  Save Changes
                 </Button>
               </div>
             </Form>
