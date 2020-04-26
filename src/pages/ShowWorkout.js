@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { getPost } from '../helpers/fireUtils';
+import { getPost, deletePost } from '../helpers/fireUtils';
 import Timestamp from 'react-timestamp';
 
 import {
@@ -18,12 +18,22 @@ export default class ShowWorkout extends Component {
       postId: props.match.params.postId,
       post: null
     }
+
+    this._handleDeletePost = this._handleDeletePost.bind(this);
   }
 
   async componentDidMount() {
     const post = await getPost(this.state.postId);
     console.log(post.data());
     this.setState({post: post.data()});
+  }
+
+  async _handleDeletePost() {
+    const sure = window.confirm('Are you sure?');
+    if (!sure) return;
+
+    await deletePost(this.state.postId, this.state.post.userId);
+    this.props.history.push(`/profile/${this.state.post.userId}`);
   }
 
   render() {
@@ -53,7 +63,7 @@ export default class ShowWorkout extends Component {
                   </Col>
                   <Col>
                     <Card.Link as={Link} to={`/workouts/edit/${this.state.postId}`}>Edit</Card.Link>
-                    <Card.Link href={`#`}>Delete</Card.Link>
+                    <Card.Link as={Link} to={'#'} onClick={this._handleDeletePost}>Delete</Card.Link>
                   </Col>
                 </Row>
               </Card.Body>

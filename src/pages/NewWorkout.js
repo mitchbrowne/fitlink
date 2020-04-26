@@ -20,6 +20,11 @@ export default (props) => {
   const [link, setLink] = useState('');
 
   const _handleSubmit = async (e) => {
+    if (title === '' || desc === '' || image === '' || link === '') {
+      setError('Please fill out all fields');
+      return;
+    }
+
     e.preventDefault();
 
     const postDetails = {
@@ -54,7 +59,6 @@ export default (props) => {
         </Row>
         <Row className="justify-content-md-center">
           <Col md="6">
-            <Form onSubmit={_handleSubmit}>
               <Form.Group controlId="title">
                 <Form.Label>Workout Name</Form.Label>
                 <Form.Control
@@ -95,11 +99,10 @@ export default (props) => {
                 <InputTag />
               </Form.Group>
               <div className="text-center">
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" onClick={_handleSubmit}>
                   Post Workout
                 </Button>
               </div>
-            </Form>
           </Col>
         </Row>
       </Container>

@@ -5,6 +5,7 @@ export default () => {
   const tagInputRef = useRef();
 
   const _handleAddTag = (e) => {
+    e.preventDefault();
     const val = e.target.value;
     if (e.key === 'Enter' && val) {
       if (tags.find(tag => tag.toLowerCase() === val.toLowerCase())) {

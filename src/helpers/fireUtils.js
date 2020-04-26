@@ -48,7 +48,7 @@ export const editPost = async (postDetails) => {
     image: postDetails.image,
     link: postDetails.link,
   }, {merge: true}).then(() => {
-    console.log('Successful post');
+    console.log('Successful edit post');
 
     const userRef = db.collection('users').doc(postDetails.userId).collection('posts').doc(postDetails.postId);
     userRef.set({
@@ -57,10 +57,31 @@ export const editPost = async (postDetails) => {
     }, {merge: true});
 
   }).catch((error) => {
-    console.log('Unsuccessful post');
+    console.log('Unsuccessful edit post');
   })
 
 }
+
+export const deletePost = async (postId, userId) => {
+  const db = firebase.firestore();
+  const postRef = db.collection('posts').doc(postId);
+  return await postRef.delete().then(() => {
+    console.log('Successfully deleted post.');
+
+    const userRef = db.collection('users').doc(userId).collection('posts').doc(postId);
+    userRef.delete().then(() => {
+      console.log('Successfully removed post from user collection.');
+    }).catch((error) => {
+      return error.message;
+    })
+
+  }).catch((error) => {
+    console.log('Error deleting post.');
+    return error.message;
+  })
+}
+
+
 
 export const getPost = async (postId) => {
   const db = firebase.firestore();
