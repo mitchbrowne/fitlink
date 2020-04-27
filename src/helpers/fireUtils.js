@@ -2,6 +2,44 @@ import React from 'react';
 import firebase, {FieldValue} from 'firebase';
 import firestore from '../firestore';
 
+export const getUserFeedPost = async (userId) => {
+  const db = firebase.firestore();
+  let followingPosts = [];
+  await db.collection('posts').where('userId', '==', userId).get().then(posts => {
+    posts.forEach(doc => {
+      console.log(doc.id);
+      followingPosts.push(doc);
+      console.log(followingPosts);
+    });
+  })
+  return followingPosts;
+}
+
+export const getUserFeedPosts = async (userSignedInId) => {
+  const db = firebase.firestore();
+  const userRef = db.collection('following').doc(userSignedInId);
+
+  let followingUsers;
+
+  await userRef.get().then((doc) => {
+    followingUsers = Object.keys(doc.data());
+  });
+
+  followingUsers.push(userSignedInId);
+
+  let followingPosts = [];
+
+      return Promise.all(await followingUsers.map(async userId => {
+        let allPosts = [];
+        await db.collection('posts').where('userId', '==', userId).get().then(posts => {
+          posts.forEach(doc => {
+            allPosts.push(doc);
+          });
+        })
+        return allPosts;
+      }));
+}
+
 export const newPost = async (postDetails) => {
 
   const db = firebase.firestore();

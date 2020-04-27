@@ -5,8 +5,9 @@ import { getUser } from './helpers/fireUtils';
 
 import Layout from './components/Layout';
 
-import Users from './pages/Users';
 import Home from './pages/Home';
+import Users from './pages/Users';
+import UserFeed from './pages/UserFeed';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import NewWorkout from './pages/NewWorkout';
@@ -80,6 +81,13 @@ export default class App extends Component {
               path="/"
               render={(props) => (
                 <Home {...props} user={this.state.user} />
+              )}
+            />
+            <Route
+              exact
+              path="/feed"
+              render={(props) => (
+                <UserFeed {...props} user={this.state.user} />
               )}
             />
             <Route
