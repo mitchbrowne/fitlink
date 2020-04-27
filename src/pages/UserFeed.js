@@ -10,6 +10,7 @@ import {
   Card,
   CardGroup,
   Image,
+  Spinner,
 } from 'react-bootstrap';
 
 export default class UserFeed extends Component {
@@ -56,7 +57,11 @@ export default class UserFeed extends Component {
   }
 
   render() {
-    if (this.state.user === null || this.state.posts === null) return (<p>Loading User Feed...</p>)
+    if (this.state.user === null || this.state.posts === null) return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    )
 
     return (
       <div>

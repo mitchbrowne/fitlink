@@ -7,7 +7,14 @@ export default class Explore extends Component {
         <h1>
           Explore
         </h1>
+        <SearchBar />
       </div>
     )
   }
+}
+
+const SearchBar = () => {
+  return (
+    <h4>Search</h4>
+  )
 }

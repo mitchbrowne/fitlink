@@ -7,7 +7,8 @@ import {
   Row,
   Col,
   Form,
-  Button
+  Button,
+  Spinner,
 } from 'react-bootstrap';
 
 export default (props) => {
@@ -65,7 +66,11 @@ export default (props) => {
   }
 
   if (postDetails === null) {
-    return (<p>Loading Edit Workout...</p>)
+    return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    )
   }
 
   return (

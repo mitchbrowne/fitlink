@@ -10,6 +10,7 @@ import {
   Col,
   Card,
   Image,
+  Spinner,
 } from 'react-bootstrap';
 
 export default class ShowWorkout extends Component {
@@ -42,7 +43,12 @@ export default class ShowWorkout extends Component {
   }
 
   render() {
-    if (this.state.post === null) return (<p>Loading Workout...</p>)
+    if (this.state.post === null) return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    )
+
     return (
       <div>
         <Container>

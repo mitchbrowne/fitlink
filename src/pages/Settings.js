@@ -8,7 +8,8 @@ import {
   Col,
   Form,
   Button,
-  Image
+  Image,
+  Spinner,
 } from 'react-bootstrap';
 
 export default (props) => {
@@ -37,7 +38,11 @@ export default (props) => {
   }
 
   if (user === null) {
-    return (<p>Loading Settings...</p>)
+    return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    )
   }
 
   return (

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { getUsers } from '../helpers/fireUtils';
 
 import {
-  Container
+  Container,
+  Spinner
 } from 'react-bootstrap';
 
 export default class Users extends Component {
@@ -21,7 +22,11 @@ export default class Users extends Component {
   }
 
   render() {
-    if (this.state.users === null || this.props.user === null) return (<p>Loading Users...</p>);
+    if (this.state.users === null || this.props.user === null) return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
 
     return (
       <div>

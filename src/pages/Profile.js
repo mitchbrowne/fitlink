@@ -10,7 +10,8 @@ import {
   Col,
   Card,
   Image,
-  Button
+  Button,
+  Spinner,
 } from 'react-bootstrap';
 
 export default class Profile extends Component {
@@ -58,7 +59,11 @@ export default class Profile extends Component {
   }
 
   render() {
-    if (this.state.userProfile === null || this.state.posts === null) return (<p>Loading Profile...</p>);
+    if (this.state.userProfile === null || this.state.posts === null) return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
 
     return (
       <div>
