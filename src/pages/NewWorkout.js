@@ -12,7 +12,7 @@ import {
 
 export default (props) => {
   const [error, setError] = useState('');
-  const [title, setTitle] = useState('Testing Times');
+  const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('Really hard stuff');
   const [image, setImage] = useState('https://i.ytimg.com/vi/yRCUfumiqhk/maxresdefault.jpg');
   const [hashtags, setHashtags] = useState('');

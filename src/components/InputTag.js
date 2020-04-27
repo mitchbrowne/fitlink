@@ -1,5 +1,11 @@
 import React, { Component, useState, useEffect, useRef } from 'react';
 
+import {
+  Form,
+  InputGroup,
+  Button
+} from 'react-bootstrap';
+
 export default (props) => {
 
   const [hashtags, setHashtags] = useState([]);
@@ -38,20 +44,29 @@ export default (props) => {
 
 
   return (
-    <div className="input-tag">
-      <ul className="input-tag__tags">
-        {hashtags.map((hashtag, i) => (
-          <li key={hashtag}>
-            #{hashtag}
-            <button type="button" onClick={() => {_handleRemoveHashtag(i)}}>Remove</button>
-          </li>
-        ))}
-
-
-        <li className="input-tag__tags__input">
-          <input type="text" onKeyUp={_handleAddHashtag} ref={hashtagInputRef}/>
-        </li>
-      </ul>
-    </div>
+      <InputGroup>
+        <InputGroup.Prepend>
+          {hashtags.map((hashtag, i) => (
+              <Button key={hashtag} variant="outline-secondary" onClick={() => {_handleRemoveHashtag(i)}}>#{hashtag}</Button>
+          ))}
+        </InputGroup.Prepend>
+        <Form.Control type="text" onKeyUp={_handleAddHashtag} ref={hashtagInputRef}/>
+      </InputGroup>
   )
 }
+
+{/* <div className="input-tag">
+  <ul className="input-tag__tags">
+    {hashtags.map((hashtag, i) => (
+      <li key={hashtag}>
+        #{hashtag}
+        <button type="button" onClick={() => {_handleRemoveHashtag(i)}}>Remove</button>
+      </li>
+    ))}
+
+
+    <li className="input-tag__tags__input">
+      <Form.Control type="text" onKeyUp={_handleAddHashtag} ref={hashtagInputRef}/>
+    </li>
+  </ul>
+</div> */}
