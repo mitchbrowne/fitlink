@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
-import { getUser, getUserPosts } from '../helpers/fireUtils';
+import { getUser, getUserPosts, isFollowing, addFollowing } from '../helpers/fireUtils';
 import Timestamp from 'react-timestamp';
 
 import {
@@ -36,10 +36,14 @@ export default class Profile extends Component {
     console.log('Mounted.');
     const posts = await getUserPosts(this.state.userId);
     this.setState({posts: posts})
+
+    const isFollowingBool = await isFollowing(this.state.userId, this.props.user.userId);
+    this.setState({following: isFollowingBool});
   }
 
   _handleFollowChange() {
     console.log('Follow Change');
+    addFollowing(this.state.userId, this.props.user.userId);
     this.setState({following: !this.state.following});
   }
 
@@ -103,7 +107,6 @@ const UserProfileHeader = (props) => {
 const UserProfilePosts = (props) => {
   const userPosts = props.posts.map((post) => {
     const p = post.data();
-    console.log(p);
     let hashtags = [];
     if (p.hashtags) {
       hashtags = Array.from(p.hashtags);

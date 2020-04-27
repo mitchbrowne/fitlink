@@ -202,3 +202,44 @@ export const signUp = async (email, password, displayName) => {
         return error.message;
       });
 }
+
+export const isFollowing = async (userId, userSignedInId) => {
+  const db = firebase.firestore();
+  const followingRef = db.collection('following').doc(userSignedInId);
+  return followingRef.get().then((doc) => {
+      if (userId in doc.data()) {
+        console.log(userId);
+        return true;
+      }
+      return false;
+    });
+}
+
+export const addFollowing = async (userId, userSignedInId) => {
+  const db = firebase.firestore();
+
+  db.collection('users').doc(userSignedInId).update({
+    followingCount: firebase.firestore.FieldValue.increment(1)
+  });
+
+  db.collection('users').doc(userId).update({
+    followersCount: firebase.firestore.FieldValue.increment(1)
+  });
+
+  db.collection('following').doc(userSignedInId).set({
+    [userId]: true
+  }, {merge: true}).then(function() {
+    console.log('Added following');
+  });
+
+  db.collection('followers').doc(userId).set({
+    [userSignedInId]: true
+  }).then(function() {
+    console.log('Added to followers');
+  });
+
+}
+
+export const removeFollowing = async (userId, userSignedInId) => {
+  const db = firebase.firestore();
+}
