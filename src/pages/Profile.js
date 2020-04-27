@@ -122,7 +122,7 @@ const UserProfilePosts = (props) => {
       hashtags = Array.from(p.hashtags);
     }
     return (
-        <Col lg={4} key={post.id}>
+        <Col className="mb-4" lg={4} key={post.id}>
           <div>
             <Card>
               <Card.Img variant="top" src={p.image} alt={`${p.title} post image`} className='profile-post-image' />

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { getUserFeedPosts } from '../helpers/fireUtils';
+import { requestUserFeedPosts, getUserFeedPosts } from '../helpers/fireUtils';
+import Timestamp from 'react-timestamp';
 
 import {
   Container,
@@ -8,6 +9,7 @@ import {
   Col,
   Card,
   CardGroup,
+  Image,
 } from 'react-bootstrap';
 
 export default class UserFeed extends Component {
@@ -27,7 +29,7 @@ export default class UserFeed extends Component {
 
     if (this.props.user !== null) {
       const getPostsData = async () => {
-        const postsData = await getUserFeedPosts(this.props.user.userId);
+        const postsData = await requestUserFeedPosts(this.props.user.userId);
         console.log(postsData.flat());
         this.setState({posts: postsData.flat()});
       }
@@ -43,7 +45,7 @@ export default class UserFeed extends Component {
       this.setState({user: this.props.user});
 
       const getPostsData = async () => {
-        const postsData = await getUserFeedPosts(this.props.user.userId);
+        const postsData = await requestUserFeedPosts(this.props.user.userId);
         console.log(postsData.flat());
         this.setState({posts: postsData.flat()});
       }
@@ -69,6 +71,7 @@ export default class UserFeed extends Component {
 const UserFeedPosts = (props) => {
   const allPosts = props.posts.map((post) => {
     const p = post.data();
+    console.log(p);
     return (
       <Row key={post.id} className="d-flex justify-content-center  mt-4">
         <CardGroup>
@@ -83,8 +86,9 @@ const UserFeedPosts = (props) => {
                 </Link>
               </Row>
               <Row>
+                <Image src={p.photoURL} className="navbar-photoURL" roundedCircle />
                 <Link to={`/profile/${p.userId}`}>
-                <Card.Subtitle className="mb-4 text-muted">{p.displayName}</Card.Subtitle>
+                  <Card.Subtitle className="mb-4 text-muted">{p.displayName}</Card.Subtitle>
                 </Link>
               </Row>
               <Row>
@@ -99,7 +103,13 @@ const UserFeedPosts = (props) => {
                   }
                 </Card.Subtitle>
               </Row>
+
             </Card.Body>
+            <Card.Footer>
+              <small className="mb-4 text-muted" >
+                <Timestamp date={p.createdAt.toDate()}/>
+              </small>
+            </Card.Footer>
           </Card>
         </CardGroup>
       </Row>
@@ -107,8 +117,8 @@ const UserFeedPosts = (props) => {
   });
 
   return (
-    <div>
+    <Container className="justify-content-center">
       {allPosts}
-    </div>
+    </Container>
   )
 }

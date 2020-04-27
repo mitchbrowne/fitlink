@@ -8,6 +8,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Users from './pages/Users';
 import UserFeed from './pages/UserFeed';
+import Explore from './pages/Explore';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import NewWorkout from './pages/NewWorkout';
@@ -88,6 +89,13 @@ export default class App extends Component {
               path="/feed"
               render={(props) => (
                 <UserFeed {...props} user={this.state.user} />
+              )}
+            />
+            <Route
+              exact
+              path="/explore"
+              render={(props) => (
+                <Explore {...props} user={this.state.user} />
               )}
             />
             <Route

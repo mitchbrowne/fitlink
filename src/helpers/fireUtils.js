@@ -2,17 +2,20 @@ import React from 'react';
 import firebase, {FieldValue} from 'firebase';
 import firestore from '../firestore';
 
-export const getUserFeedPost = async (userId) => {
-  const db = firebase.firestore();
-  let followingPosts = [];
-  await db.collection('posts').where('userId', '==', userId).get().then(posts => {
-    posts.forEach(doc => {
-      console.log(doc.id);
-      followingPosts.push(doc);
-      console.log(followingPosts);
-    });
-  })
-  return followingPosts;
+export const requestUserFeedPosts = async (userSignedInId) => {
+  const postsData = await getUserFeedPosts(userSignedInId);
+
+  const compare = (a, b) => {
+    if (a.data().createdAt < b.data().createdAt) {
+      return 1;
+    }
+    if (a.data().createdAt > b.data().createdAt) {
+      return -1;
+    }
+    return 0;
+  }
+
+  return postsData.flat().sort(compare)
 }
 
 export const getUserFeedPosts = async (userSignedInId) => {
@@ -33,15 +36,15 @@ export const getUserFeedPosts = async (userSignedInId) => {
 
   let followingPosts = [];
 
-      return Promise.all(await followingUsers.map(async userId => {
-        let allPosts = [];
-        await db.collection('posts').where('userId', '==', userId).get().then(posts => {
-          posts.forEach(doc => {
-            allPosts.push(doc);
-          });
-        })
-        return allPosts;
-      }));
+  return Promise.all(await followingUsers.map(async userId => {
+    let allPosts = [];
+    await db.collection('posts').where('userId', '==', userId).get().then(posts => {
+      posts.forEach(doc => {
+        allPosts.push(doc);
+      });
+    })
+    return allPosts;
+  }));
 }
 
 export const newPost = async (postDetails) => {
@@ -58,6 +61,7 @@ export const newPost = async (postDetails) => {
   return await postsRef.add({
     userId: postDetails.userId,
     displayName: postDetails.displayName,
+    photoURL: postDetails.photoURL,
     title: postDetails.title,
     desc: postDetails.desc,
     image: postDetails.image,

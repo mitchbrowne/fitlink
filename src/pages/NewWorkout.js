@@ -31,6 +31,7 @@ export default (props) => {
       userId: props.user.userId,
       postsCount: props.user.postsCount,
       displayName: props.user.displayName,
+      photoURL: props.user.photoURL,
       title: title,
       desc: desc,
       image: image,
