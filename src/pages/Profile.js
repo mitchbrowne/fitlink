@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
-import { getUser, getUserPosts, isFollowing, addFollowing } from '../helpers/fireUtils';
+import { getUser, getUserPosts, isFollowing, addFollowing, removeFollowing } from '../helpers/fireUtils';
 import Timestamp from 'react-timestamp';
 
 import {
@@ -43,7 +43,11 @@ export default class Profile extends Component {
 
   _handleFollowChange() {
     console.log('Follow Change');
-    addFollowing(this.state.userId, this.props.user.userId);
+    if (this.state.following) {
+      removeFollowing(this.state.userId, this.props.user.userId);
+    } else {
+      addFollowing(this.state.userId, this.props.user.userId);
+    }
     this.setState({following: !this.state.following});
   }
 

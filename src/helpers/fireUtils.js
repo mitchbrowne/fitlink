@@ -242,4 +242,22 @@ export const addFollowing = async (userId, userSignedInId) => {
 
 export const removeFollowing = async (userId, userSignedInId) => {
   const db = firebase.firestore();
+
+  db.collection('users').doc(userSignedInId).update({
+    followingCount: firebase.firestore.FieldValue.increment(-1)
+  });
+
+  db.collection('users').doc(userId).update({
+    followersCount: firebase.firestore.FieldValue.increment(-1)
+  });
+
+  db.collection('following').doc(userSignedInId).update({
+    [userId]: firebase.firestore.FieldValue.delete()
+  }).then(function() {
+    console.log('Deleted following');
+  });
+
+  db.collection('followers').doc(userId).delete().then(function() {
+    console.log('Deleted follower');
+  })
 }
