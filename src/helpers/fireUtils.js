@@ -20,6 +20,7 @@ export const newPost = async (postDetails) => {
     desc: postDetails.desc,
     image: postDetails.image,
     link: postDetails.link,
+    hashtags: postDetails.hashtags,
     createdAt: firebase.firestore.Timestamp.fromDate(new Date())
   }).then((docRef) => {
     console.log('Successful post');
@@ -28,6 +29,7 @@ export const newPost = async (postDetails) => {
     userRef.doc(docRef.id).set({
       title: postDetails.title,
       image: postDetails.image,
+      hashtags: postDetails.hashtags,
       createdAt: firebase.firestore.Timestamp.fromDate(new Date())
     }).then(() => {
 
@@ -50,6 +52,7 @@ export const editPost = async (postDetails) => {
     desc: postDetails.desc,
     image: postDetails.image,
     link: postDetails.link,
+    hashtags: postDetails.hashtags,
   }, {merge: true}).then(() => {
     console.log('Successful edit post');
 
@@ -57,6 +60,7 @@ export const editPost = async (postDetails) => {
     userRef.set({
       title: postDetails.title,
       image: postDetails.image,
+      hashtags: postDetails.hashtags,
     }, {merge: true});
 
   }).catch((error) => {

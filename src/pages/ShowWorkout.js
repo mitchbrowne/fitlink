@@ -39,10 +39,6 @@ export default class ShowWorkout extends Component {
 
       this.props.history.push(`/profile/${this.state.post.userId}`);
     });
-
-    // await this.props.fetchUpdatedUser(this.props.user.userId);
-    //
-    // this.props.history.push(`/profile/${this.state.post.userId}`);
   }
 
   render() {

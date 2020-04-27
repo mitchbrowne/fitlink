@@ -30,15 +30,7 @@ export default (props) => {
     e.preventDefault();
     await updateSettings(user.email, displayName, bio, photoURL).then(() => {
       setError('Changes saved!');
-      const updatedUser = {
-        userId: user.userId,
-        email: user.email,
-        displayName: displayName,
-        bio: bio,
-        photoURL: photoURL
-      }
-      console.log(updatedUser);
-      props.fetchUpdatedUser(updatedUser.userId);
+      props.fetchUpdatedUser(user.userId);
     }).catch((error) => {
       setError(error.message);
     })

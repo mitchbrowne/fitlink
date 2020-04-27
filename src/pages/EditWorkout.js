@@ -13,6 +13,7 @@ import {
 export default (props) => {
   const [error, setError] = useState('');
   const [postId, setPostId] = useState(props.match.params.postId);
+  const [postDetails, setPostDetails] = useState(null);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [image, setImage] = useState('');
@@ -26,10 +27,12 @@ export default (props) => {
       const postData = await getPost(postId);
       console.log(postData.data());
       let post = postData.data();
+      setPostDetails(post);
       setTitle(post.title);
       setDesc(post.desc);
       setImage(post.image);
       setLink(post.link);
+      setHashtags(post.hashtags);
     }
 
     getPostAPI();
@@ -45,7 +48,8 @@ export default (props) => {
       title: title,
       desc: desc,
       image: image,
-      link: link
+      link: link,
+      hashtags: hashtags,
     }
     console.log(postDetails);
 
@@ -53,6 +57,15 @@ export default (props) => {
 
     props.history.push(`/workouts/show/${postId}`);
 
+  }
+
+  const _handleHashtags = (hashtagsData) => {
+    setHashtags(hashtagsData);
+    console.log(hashtagsData);
+  }
+
+  if (postDetails === null) {
+    return (<p>Loading Edit Workout...</p>)
   }
 
   return (
@@ -108,7 +121,7 @@ export default (props) => {
               </Form.Group>
               <Form.Group controlId="tags">
                 <Form.Label>Tags</Form.Label>
-                <InputTag />
+                <InputTag hashtags={hashtags} handleHashtags={_handleHashtags}/>
               </Form.Group>
               <div className="text-center">
                 <Button variant="primary" type="submit">

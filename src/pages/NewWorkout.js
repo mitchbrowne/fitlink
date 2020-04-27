@@ -34,15 +34,19 @@ export default (props) => {
       title: title,
       desc: desc,
       image: image,
-      link: link
+      link: link,
+      hashtags: hashtags
     }
     console.log('Post Details: ', postDetails);
     const docRef = await newPost(postDetails).then((data) => {
       props.fetchUpdatedUser(props.user.userId);
       props.history.push(`/workouts/show/${data.id}`);
     });
+  }
 
-
+  const _handleHashtags = (hashtagsData) => {
+    setHashtags(hashtagsData);
+    console.log(hashtagsData);
   }
 
   return (
@@ -97,7 +101,7 @@ export default (props) => {
               </Form.Group>
               <Form.Group controlId="tags">
                 <Form.Label>Tags</Form.Label>
-                <InputTag />
+                <InputTag handleHashtags={_handleHashtags} hashtags={hashtags}/>
               </Form.Group>
               <div className="text-center">
                 <Button variant="primary" type="submit" onClick={_handleSubmit}>

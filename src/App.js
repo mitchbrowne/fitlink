@@ -56,20 +56,6 @@ export default class App extends Component {
     console.log('FETCHING UPDATED USER');
     const userDetails = await getUser(userId);
 
-    // .then((userData) => {
-    //   console.log(userData.data());
-    //   const updatedUser = {
-    //     userId: userData.id,
-    //     postsCount: userData.data().postsCount,
-    //     email: userData.data().email,
-    //     displayName: userData.data().displayName,
-    //     bio: userData.data().bio,
-    //     photoURL: userData.data().photoURL
-    //   }
-    //   this.setState({user: updatedUser});
-    //   console.log(updatedUser);
-    // });
-
     const updatedUser = {
       userId: userId,
       postsCount: userDetails.data().postsCount,
