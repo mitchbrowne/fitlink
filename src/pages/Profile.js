@@ -89,19 +89,39 @@ const UserProfileHeader = (props) => {
 const UserProfilePosts = (props) => {
   const userPosts = props.posts.map((post) => {
     const p = post.data();
+    console.log(p);
+    let hashtags = [];
+    if (p.hashtags) {
+      hashtags = Array.from(p.hashtags);
+    }
     return (
         <Col lg={4} key={post.id}>
           <div>
             <Card>
               <Card.Img variant="top" src={p.image} alt={`${p.title} post image`} className='profile-post-image' />
               <Card.Body>
-                <Link to={`/workouts/show/${post.id}`}>
-                <h4>{p.title}</h4>
-                </Link>
-                <Timestamp date={p.createdAt.toDate()} />
-                <Card.Link as={Link} to="#">Like</Card.Link>
-                <Card.Link as={Link} to="#">Comment</Card.Link>
-                <Card.Link as={Link} to="#">Link</Card.Link>
+                <Row>
+                  <Link to={`/workouts/show/${post.id}`}>
+                  <h4>{p.title}</h4>
+                  </Link>
+                </Row>
+                <Row>
+                  <p>
+                    {
+                      hashtags.map((hashtag) => (
+                        `#${hashtag}   `
+                      ))
+                    }
+                  </p>
+
+                </Row>
+                <Row>
+                  <Timestamp date={p.createdAt.toDate()} />
+                  <Card.Link as={Link} to="#">Like</Card.Link>
+                  <Card.Link as={Link} to="#">Comment</Card.Link>
+                  <Card.Link as={Link} to="#">Link</Card.Link>
+                </Row>
+
               </Card.Body>
             </Card>
           </div>

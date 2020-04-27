@@ -5,6 +5,7 @@ import { getUser } from './helpers/fireUtils';
 
 import Layout from './components/Layout';
 
+import Users from './pages/Users';
 import Home from './pages/Home';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
@@ -79,6 +80,13 @@ export default class App extends Component {
               path="/"
               render={(props) => (
                 <Home {...props} user={this.state.user} />
+              )}
+            />
+            <Route
+              exact
+              path="/users"
+              render={(props) => (
+                <Users {...props} user={this.state.user} />
               )}
             />
             <Route

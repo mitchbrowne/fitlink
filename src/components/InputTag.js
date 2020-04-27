@@ -34,11 +34,7 @@ export default (props) => {
       setHashtags(hashtagsData);
     }
 
-  }, [props.hashtags])
-
-  // useEffect(() => {
-  //   props.handleHashtags(hashtags);
-  // }, [hashtags])
+  }, [props])
 
 
   return (

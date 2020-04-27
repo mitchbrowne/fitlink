@@ -83,7 +83,6 @@ export default (props) => {
         </Row>
         <Row className="justify-content-md-center">
           <Col md="6">
-            <Form onSubmit={_handleSubmit}>
               <Form.Group controlId="title">
                 <Form.Label>Workout Name</Form.Label>
                 <Form.Control
@@ -124,11 +123,10 @@ export default (props) => {
                 <InputTag hashtags={hashtags} handleHashtags={_handleHashtags}/>
               </Form.Group>
               <div className="text-center">
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" onClick={_handleSubmit}>
                   Save Changes
                 </Button>
               </div>
-            </Form>
           </Col>
         </Row>
       </Container>

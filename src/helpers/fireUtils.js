@@ -124,6 +124,19 @@ export const getUser = async (userId) => {
   return await userRef.get();
 }
 
+export const getUsers = async () => {
+  const db = firebase.firestore();
+  const usersRef = db.collection('users');
+
+  return await usersRef.get().then(users => {
+    let allUsers = [];
+    users.forEach(doc => {
+      allUsers.push(doc);
+    })
+    return allUsers;
+  });
+}
+
 export const updateSettings = async (email, displayName, bio, photoURL) => {
   const user = firebase.auth().currentUser;
 
