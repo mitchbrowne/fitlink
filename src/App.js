@@ -52,9 +52,34 @@ export default class App extends Component {
     })
   }
 
-  _fetchUpdatedUser = (user) => {
-    this.setState({user: user});
-    console.log(user);
+  _fetchUpdatedUser = async (userId) => {
+    console.log('FETCHING UPDATED USER');
+    const userDetails = await getUser(userId);
+
+    // .then((userData) => {
+    //   console.log(userData.data());
+    //   const updatedUser = {
+    //     userId: userData.id,
+    //     postsCount: userData.data().postsCount,
+    //     email: userData.data().email,
+    //     displayName: userData.data().displayName,
+    //     bio: userData.data().bio,
+    //     photoURL: userData.data().photoURL
+    //   }
+    //   this.setState({user: updatedUser});
+    //   console.log(updatedUser);
+    // });
+
+    const updatedUser = {
+      userId: userId,
+      postsCount: userDetails.data().postsCount,
+      email: userDetails.data().email,
+      displayName: userDetails.data().displayName,
+      bio: userDetails.data().bio,
+      photoURL: userDetails.data().photoURL
+    }
+    console.log('Updated User: ', updatedUser.postsCount);
+    this.setState({user: updatedUser});
   }
 
   render() {
@@ -89,13 +114,13 @@ export default class App extends Component {
               exact
               path="/workouts/new"
               render={(props) => (
-                <NewWorkout {...props} user={this.state.user} />
+                <NewWorkout {...props} user={this.state.user} fetchUpdatedUser={this._fetchUpdatedUser}/>
               )}
             />
             <Route
               path="/workouts/show/:postId"
               render={(props) => (
-                <ShowWorkout {...props} user={this.state.user} />
+                <ShowWorkout {...props} user={this.state.user} fetchUpdatedUser={this._fetchUpdatedUser}/>
               )}
             />
             <Route

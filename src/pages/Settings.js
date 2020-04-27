@@ -38,7 +38,7 @@ export default (props) => {
         photoURL: photoURL
       }
       console.log(updatedUser);
-      props.fetchUpdatedUser(updatedUser);
+      props.fetchUpdatedUser(updatedUser.userId);
     }).catch((error) => {
       setError(error.message);
     })

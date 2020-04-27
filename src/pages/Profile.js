@@ -87,10 +87,8 @@ const UserProfileHeader = (props) => {
 }
 
 const UserProfilePosts = (props) => {
-  console.log(props.posts);
   const userPosts = props.posts.map((post) => {
     const p = post.data();
-    console.log(p);
     return (
         <Col lg={4} key={post.id}>
           <div>

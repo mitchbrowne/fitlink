@@ -1,10 +1,15 @@
 import React from 'react';
-import firebase from 'firebase';
+import firebase, {FieldValue} from 'firebase';
 import firestore from '../firestore';
 
 export const newPost = async (postDetails) => {
 
   const db = firebase.firestore();
+
+  db.collection('users').doc(postDetails.userId).update({
+    postsCount: firebase.firestore.FieldValue.increment(1)
+  });
+
   const postsRef = db.collection('posts')
 
   // use .add() if no doc exists, and then callback provides the docRef
@@ -25,9 +30,7 @@ export const newPost = async (postDetails) => {
       image: postDetails.image,
       createdAt: firebase.firestore.Timestamp.fromDate(new Date())
     }).then(() => {
-      db.collection('users').doc(postDetails.userId).set({
-        postsCount: (postDetails.postsCount + 1)
-      }, {merge: true});
+
     });
     return docRef;
 
@@ -62,15 +65,22 @@ export const editPost = async (postDetails) => {
 
 }
 
-export const deletePost = async (postId, userId) => {
+export const deletePost = async (postId, userId, postsCount) => {
   const db = firebase.firestore();
+
+  const userRef = db.collection('users').doc(userId);
+  userRef.update({
+    postsCount: firebase.firestore.FieldValue.increment(-1)
+  });
+
   const postRef = db.collection('posts').doc(postId);
   return await postRef.delete().then(() => {
     console.log('Successfully deleted post.');
 
-    const userRef = db.collection('users').doc(userId).collection('posts').doc(postId);
-    userRef.delete().then(() => {
+
+    userRef.collection('posts').doc(postId).delete().then(() => {
       console.log('Successfully removed post from user collection.');
+
     }).catch((error) => {
       return error.message;
     })

@@ -12,12 +12,12 @@ import {
 
 export default (props) => {
   const [error, setError] = useState('');
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
-  const [image, setImage] = useState('');
+  const [title, setTitle] = useState('Testing Times');
+  const [desc, setDesc] = useState('Really hard stuff');
+  const [image, setImage] = useState('https://i.ytimg.com/vi/yRCUfumiqhk/maxresdefault.jpg');
   const [hashtags, setHashtags] = useState('');
   const [friends, setFriends] = useState('');
-  const [link, setLink] = useState('');
+  const [link, setLink] = useState('https://www.youtube.com/watch?v=yRCUfumiqhk');
 
   const _handleSubmit = async (e) => {
     if (title === '' || desc === '' || image === '' || link === '') {
@@ -36,11 +36,12 @@ export default (props) => {
       image: image,
       link: link
     }
+    console.log('Post Details: ', postDetails);
+    const docRef = await newPost(postDetails).then((data) => {
+      props.fetchUpdatedUser(props.user.userId);
+      props.history.push(`/workouts/show/${data.id}`);
+    });
 
-    const docRef = await newPost(postDetails);
-
-    console.log('docRefId: ', docRef.id);
-    props.history.push(`/workouts/show/${docRef.id}`);
 
   }
 

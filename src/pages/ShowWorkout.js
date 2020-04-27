@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import firebase from 'firebase';
 import { getPost, deletePost } from '../helpers/fireUtils';
 import Timestamp from 'react-timestamp';
 
@@ -31,9 +32,17 @@ export default class ShowWorkout extends Component {
   async _handleDeletePost() {
     const sure = window.confirm('Are you sure?');
     if (!sure) return;
+    console.log('First Count: ', this.props.user.postsCount);
+    const deleteData = await deletePost(this.state.postId, this.state.post.userId, this.props.user.postsCount).then(async () => {
+      console.log(this.props.user.postsCount);
+      this.props.fetchUpdatedUser(this.props.user.userId);
 
-    await deletePost(this.state.postId, this.state.post.userId);
-    this.props.history.push(`/profile/${this.state.post.userId}`);
+      this.props.history.push(`/profile/${this.state.post.userId}`);
+    });
+
+    // await this.props.fetchUpdatedUser(this.props.user.userId);
+    //
+    // this.props.history.push(`/profile/${this.state.post.userId}`);
   }
 
   render() {
