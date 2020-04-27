@@ -21,6 +21,7 @@ export default class Profile extends Component {
       userProfile: null,
       posts: null,
       following: false,
+      followersCount: 0
     }
     this._handleFollowChange = this._handleFollowChange.bind(this);
   }
@@ -29,6 +30,7 @@ export default class Profile extends Component {
     const userProfile = await getUser(this.state.userId).then((userProfile) => {
       console.log('Successfully fetched user data.');
       this.setState({userProfile: userProfile.data()});
+      this.setState({followersCount: userProfile.data().followersCount});
     }).catch((error) => {
       console.log('Unsuccessfully fetched user data.');
     });
@@ -45,8 +47,12 @@ export default class Profile extends Component {
     console.log('Follow Change');
     if (this.state.following) {
       removeFollowing(this.state.userId, this.props.user.userId);
+      const newFollowersCount = this.state.followersCount - 1;
+      this.setState({followersCount: newFollowersCount});
     } else {
       addFollowing(this.state.userId, this.props.user.userId);
+      const newFollowersCount = this.state.followersCount + 1;
+      this.setState({followersCount: newFollowersCount});
     }
     this.setState({following: !this.state.following});
   }
@@ -57,7 +63,7 @@ export default class Profile extends Component {
     return (
       <div>
         <Container className="justify-content-md-center">
-          <UserProfileHeader userProfile={this.state.userProfile} following={this.state.following} handleFollowChange={this._handleFollowChange}/>
+          <UserProfileHeader userProfile={this.state.userProfile} following={this.state.following} followersCount={this.state.followersCount} handleFollowChange={this._handleFollowChange}/>
           <UserProfilePosts posts={this.state.posts}/>
         </Container>
       </div>
@@ -86,7 +92,7 @@ const UserProfileHeader = (props) => {
               <p>{props.userProfile.followingCount} Following</p>
             </Col>
             <Col>
-              <p>{props.userProfile.followersCount} Followers</p>
+              <p>{props.followersCount} Followers</p>
             </Col>
             <Col>
               <p>{props.userProfile.postsCount} Posts</p>
