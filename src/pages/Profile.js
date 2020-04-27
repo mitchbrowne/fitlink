@@ -10,6 +10,7 @@ import {
   Col,
   Card,
   Image,
+  Button
 } from 'react-bootstrap';
 
 export default class Profile extends Component {
@@ -17,16 +18,11 @@ export default class Profile extends Component {
     super(props);
     this.state = {
       userId: props.match.params.userId,
-      // user: {
-      //   displayName: 'Mitch',
-      //   bio: 'Healthy mind and body',
-      //   photoURL: `https://api.adorable.io/avatars/290/mfbrowne18@gmail.com.png`,
-      //   followingCount: 10,
-      //   followersCount: 12,
-      // },
       userProfile: null,
-      posts: null
+      posts: null,
+      following: false,
     }
+    this._handleFollowChange = this._handleFollowChange.bind(this);
   }
 
   async componentDidMount() {
@@ -42,13 +38,18 @@ export default class Profile extends Component {
     this.setState({posts: posts})
   }
 
+  _handleFollowChange() {
+    console.log('Follow Change');
+    this.setState({following: !this.state.following});
+  }
+
   render() {
     if (this.state.userProfile === null || this.state.posts === null) return (<p>Loading Profile...</p>);
 
     return (
       <div>
         <Container className="justify-content-md-center">
-          <UserProfileHeader userProfile={this.state.userProfile}/>
+          <UserProfileHeader userProfile={this.state.userProfile} following={this.state.following} handleFollowChange={this._handleFollowChange}/>
           <UserProfilePosts posts={this.state.posts}/>
         </Container>
       </div>
@@ -58,6 +59,11 @@ export default class Profile extends Component {
 }
 
 const UserProfileHeader = (props) => {
+  const _handleFollowClick = () => {
+    console.log('Follow clicked');
+    props.handleFollowChange();
+  }
+
   return (
     <div>
       <Row md="6" className="justify-content-md-center">
@@ -77,6 +83,14 @@ const UserProfileHeader = (props) => {
             <Col>
               <p>{props.userProfile.postsCount} Posts</p>
             </Col>
+          </Row>
+          <Row>
+            <Button size="sm" onClick={_handleFollowClick}>
+              {props.following
+                ? ('Following')
+                : ('Follow')
+              }
+            </Button>
           </Row>
         </Col>
       </Row>
