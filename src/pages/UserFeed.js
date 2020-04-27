@@ -7,6 +7,7 @@ import {
   Row,
   Col,
   Card,
+  CardGroup,
 } from 'react-bootstrap';
 
 export default class UserFeed extends Component {
@@ -18,12 +19,28 @@ export default class UserFeed extends Component {
     }
   }
 
+  async componentDidMount() {
+    console.log("Mounting.......");
+    if (this.props.user) {
+      this.setState({user: this.props.user});
+    }
+
+    if (this.props.user !== null) {
+      const getPostsData = async () => {
+        const postsData = await getUserFeedPosts(this.props.user.userId);
+        console.log(postsData.flat());
+        this.setState({posts: postsData.flat()});
+      }
+
+      getPostsData();
+    }
+
+
+  }
+
   async componentDidUpdate() {
     if (this.state.user === null) {
       this.setState({user: this.props.user});
-      // const postsData = await getUserFeedPosts(this.props.user.userId);
-      // console.log(postsData);
-      // this.setState({posts: postsData});
 
       const getPostsData = async () => {
         const postsData = await getUserFeedPosts(this.props.user.userId);
@@ -53,38 +70,38 @@ const UserFeedPosts = (props) => {
   const allPosts = props.posts.map((post) => {
     const p = post.data();
     return (
-      <Row key={post.id} className="d-flex justify-content-center">
-        <Col>
-          <Card>
+      <Row key={post.id} className="d-flex justify-content-center  mt-4">
+        <CardGroup>
+          <Card className="w-75 mb-4">
             <Card.Img variant="top" src={p.image} alt={`${p.title} post image`} />
           </Card>
-        </Col>
-        <Col>
-          <Card>
+          <Card className="w-75 mb-4">
             <Card.Body>
               <Row>
-                <h2>{p.title}</h2>
-              </Row>
-              <Row>
-                <Link to={`/profile/${p.userId}`}>
-                  <h4>{p.displayName}</h4>
+                <Link to={`/workouts/show/${post.id}`}>
+                  <Card.Title>{p.title}</Card.Title>
                 </Link>
               </Row>
               <Row>
-                <p>{p.desc}</p>
+                <Link to={`/profile/${p.userId}`}>
+                <Card.Subtitle className="mb-4 text-muted">{p.displayName}</Card.Subtitle>
+                </Link>
               </Row>
               <Row>
-                <p>
+                <Card.Text className="mb-4">{p.desc}</Card.Text>
+              </Row>
+              <Row>
+                <Card.Subtitle className="mb-2 text-muted">
                   {
                     p.hashtags.map((hashtag) => (
                       `#${hashtag}   `
                     ))
                   }
-                </p>
+                </Card.Subtitle>
               </Row>
             </Card.Body>
           </Card>
-        </Col>
+        </CardGroup>
       </Row>
     )
   });

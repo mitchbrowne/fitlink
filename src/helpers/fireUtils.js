@@ -22,6 +22,10 @@ export const getUserFeedPosts = async (userSignedInId) => {
   let followingUsers;
 
   await userRef.get().then((doc) => {
+    if (!doc.data()) {
+      followingUsers = [];
+      return;
+    }
     followingUsers = Object.keys(doc.data());
   });
 
@@ -245,6 +249,9 @@ export const isFollowing = async (userId, userSignedInId) => {
   const db = firebase.firestore();
   const followingRef = db.collection('following').doc(userSignedInId);
   return followingRef.get().then((doc) => {
+    if (!doc.data()) {
+      return false;
+    }
       if (userId in doc.data()) {
         console.log(userId);
         return true;

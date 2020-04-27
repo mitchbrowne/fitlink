@@ -89,10 +89,10 @@ const UserProfileHeader = (props) => {
           <h4>{props.userProfile.bio}</h4>
           <Row>
             <Col>
-              <p>{props.userProfile.followingCount} Following</p>
+              <p>{props.followersCount} Followers</p>
             </Col>
             <Col>
-              <p>{props.followersCount} Followers</p>
+              <p>{props.userProfile.followingCount} Following</p>
             </Col>
             <Col>
               <p>{props.userProfile.postsCount} Posts</p>
