@@ -12,10 +12,10 @@ import {
 
 export default (props) => {
   const [error, setError] = useState('');
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('Testing Times');
   const [desc, setDesc] = useState('Really hard stuff');
   const [image, setImage] = useState('https://i.ytimg.com/vi/yRCUfumiqhk/maxresdefault.jpg');
-  const [hashtags, setHashtags] = useState('');
+  const [hashtags, setHashtags] = useState(['Test it']);
   const [friends, setFriends] = useState('');
   const [link, setLink] = useState('https://www.youtube.com/watch?v=yRCUfumiqhk');
 

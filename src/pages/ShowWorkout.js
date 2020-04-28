@@ -17,11 +17,13 @@ export default class ShowWorkout extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      heartStatus: false,
       postId: props.match.params.postId,
       post: null
     }
 
     this._handleDeletePost = this._handleDeletePost.bind(this);
+    this._handleHeart = this._handleHeart.bind(this);
   }
 
   async componentDidMount() {
@@ -40,6 +42,11 @@ export default class ShowWorkout extends Component {
 
       this.props.history.push(`/profile/${this.state.post.userId}`);
     });
+  }
+
+  _handleHeart() {
+    console.log('Hearted!');
+    this.setState({heartStatus: !this.state.heartStatus});
   }
 
   render() {
@@ -68,7 +75,11 @@ export default class ShowWorkout extends Component {
                     <Timestamp date={this.state.post.createdAt.toDate()} />
                   </Col>
                   <Col>
-                    <Card.Link as={Link} to="#">Like</Card.Link>
+                    <Card.Link as={Link} to="#" onClick={this._handleHeart}>{
+                      this.state.heartStatus
+                      ? ('Unlike')
+                      : ('Like')
+                    }</Card.Link>
                     <Card.Link as={Link} to="#">Comment</Card.Link>
                     <Card.Link href={`${this.state.post.link}`} target="_blank">Link</Card.Link>
                   </Col>

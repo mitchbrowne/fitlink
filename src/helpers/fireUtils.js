@@ -55,7 +55,7 @@ export const newPost = async (postDetails) => {
     postsCount: firebase.firestore.FieldValue.increment(1)
   });
 
-  const postsRef = db.collection('posts')
+  const postsRef = db.collection('posts');
 
   // use .add() if no doc exists, and then callback provides the docRef
   return await postsRef.add({
@@ -67,6 +67,7 @@ export const newPost = async (postDetails) => {
     image: postDetails.image,
     link: postDetails.link,
     hashtags: postDetails.hashtags,
+    heartsCount: 0,
     createdAt: firebase.firestore.Timestamp.fromDate(new Date())
   }).then((docRef) => {
     console.log('Successful post');
@@ -80,6 +81,16 @@ export const newPost = async (postDetails) => {
     }).then(() => {
 
     });
+
+    const heartRef = db.collection('hearts');
+    heartRef.doc(docRef.id).set({
+      users: [],
+    }).then(() => {
+      console.log('Successfull hearting.');
+    }).catch((error) => {
+      console.log('Unsuccessful hearting');
+    });
+
     return docRef;
 
   }).catch((error) => {
@@ -122,6 +133,8 @@ export const deletePost = async (postId, userId, postsCount) => {
   userRef.update({
     postsCount: firebase.firestore.FieldValue.increment(-1)
   });
+
+  const heartRef = db.collection('hearts').doc(postId).delete();
 
   const postRef = db.collection('posts').doc(postId);
   return await postRef.delete().then(() => {
