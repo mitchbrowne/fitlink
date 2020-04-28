@@ -302,7 +302,6 @@ export const isHearted = async (userSignedInId, userSignedInDisplayName, postId)
     if (!doc.data().users) {
       return false;
     }
-    console.log({userId: userSignedInId, displayName: userSignedInDisplayName});
     let result = doc.data().users.find(user => user.userId === userSignedInId);
     if (result) {
       console.log(result);
