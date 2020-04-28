@@ -26,7 +26,7 @@ export default (props) => {
       props.handleHashtags(hashtags.concat(val))
       setHashtags(hashtags.concat(val));
       hashtagInputRef.current.value = null;
-    } else if (e.key === 'Backspace' && !val) {
+    } else if (e.key === 'Backspace' && !val && (hashtags.length > 0)) {
       _handleRemoveHashtag(hashtags.length - 1);
     }
   }

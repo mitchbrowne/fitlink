@@ -44,7 +44,8 @@ export default (props) => {
 
   const _handleHashtags = (hashtagsData) => {
     console.log(hashtagsData);
-    props.handleSearchSubmit(hashtagsData);
+    setSearchValue(hashtagsData);
+    // props.handleSearchSubmit(hashtagsData, searchType);
   }
 
   const _handleSubmit = (e) => {

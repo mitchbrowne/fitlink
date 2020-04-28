@@ -185,7 +185,8 @@ export const getUsers = async () => {
 
 export const queryUsers = async (searchValue) => {
   const db = firebase.firestore();
-  const usersRef = db.collection('users').where('displayName', '==', searchValue);
+  const searchValueUpper = searchValue.replace(/^\w/, c => c.toUpperCase());
+  const usersRef = db.collection('users').where('displayName', 'in', [searchValue, searchValue.toLowerCase(), searchValue.toUpperCase(), searchValueUpper]);
 
   return await usersRef.get().then(users => {
     let allUsers = [];
@@ -194,6 +195,23 @@ export const queryUsers = async (searchValue) => {
       allUsers.push(doc);
     });
     return allUsers;
+  }).catch((error) => {
+    console.log(error.message);
+  });
+}
+
+export const queryHashtags = async (hashtagValues) => {
+  if (hashtagValues.length === 0) return [];
+
+  const db = firebase.firestore();
+  const postsRef = db.collection('posts').where('hashtags', 'array-contains-any', hashtagValues);
+
+  return await postsRef.get().then(posts => {
+    let allPosts = [];
+    posts.forEach(doc => {
+      allPosts.push(doc);
+    });
+    return allPosts;
   }).catch((error) => {
     console.log(error.message);
   });

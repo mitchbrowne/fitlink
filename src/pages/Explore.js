@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { queryUsers } from '../helpers/fireUtils';
+import { queryUsers, queryHashtags } from '../helpers/fireUtils';
+import Timestamp from 'react-timestamp';
+
 import SearchBar from '../components/SearchBar';
 
 import {
@@ -9,6 +11,7 @@ import {
   Row,
   Col,
   Card,
+  CardGroup,
   Image,
 } from 'react-bootstrap';
 
@@ -19,13 +22,26 @@ export default class Explore extends Component {
       searchLoading: false,
       searchValues: '',
       searchType: 1,
-      userSearchResults: null,
+      userSearchResults: [],
+      hashtagSearchResults: [],
     }
 
     this._handleSearchSubmit = this._handleSearchSubmit.bind(this);
   }
 
   async _handleSearchSubmit(searchValue, searchType) {
+    console.log(searchValue);
+    console.log(searchType);
+
+    if (searchType === 2) {
+      this.setState({searchLoading: true});
+      this.setState({searchType: searchType});
+      this.setState({searchValues: searchValue});
+      const hashtagSearchResults = await queryHashtags(searchValue);
+      console.log(hashtagSearchResults);
+      this.setState({hashtagSearchResults: hashtagSearchResults});
+      this.setState({searchLoading: false});
+    }
 
     if (searchType === 4) {
       this.setState({searchLoading: true});
@@ -50,6 +66,7 @@ export default class Explore extends Component {
             searchLoading={this.state.searchLoading}
             searchValue={this.state.searchValues}
             users={this.state.userSearchResults}
+            hashtagResults={this.state.hashtagSearchResults}
             searchType={this.state.searchType}
           />
         </Container>
@@ -65,6 +82,10 @@ const SearchContent = (props) => {
     </Spinner>
   )
 
+  if (props.searchType === 2) return (
+    <ShowHashtagResults searchValue={props.searchValue} hashtagResults={props.hashtagResults} />
+  )
+
   if (props.searchType === 4) return (
       <ShowUserResults searchValue={props.searchValue} users={props.users}/>
   )
@@ -75,14 +96,72 @@ const SearchContent = (props) => {
 
 }
 
-const ShowUserResults = (props) => {
-  if (props.userSearchResults === null) return (
-    <Spinner animation="border" role="status">
-      <span className="sr-only">Loading...</span>
-    </Spinner>
-  )
+const ShowHashtagResults = (props) => {
+  if (props.hashtagResults.length === 0) return (
+    <h4>No Results</h4>
+  );
 
-  const userResults = props.users.map((user) => {
+  const showResults = props.hashtagResults.map((post) => {
+    const p = post.data();
+    console.log(p);
+    return (
+      <Row key={post.id} className="d-flex justify-content-center mt-4">
+        <CardGroup>
+          <Card className="w-75 mb-4">
+            <Card.Img variant="top" src={p.image} alt={`${p.title} post image`} />
+          </Card>
+          <Card className="w-75 mb-4">
+            <Card.Body>
+              <Row>
+                <Link to={`/workouts/show/${post.id}`}>
+                  <Card.Title>{p.title}</Card.Title>
+                </Link>
+              </Row>
+              <Row>
+                <Image src={p.photoURL} className="navbar-photoURL" roundedCircle />
+                <Link to={`/profile/${p.userId}`}>
+                  <Card.Subtitle className="mb-4 text-muted">{p.displayName}</Card.Subtitle>
+                </Link>
+              </Row>
+              <Row>
+                <Card.Text className="mb-4">{p.desc}</Card.Text>
+              </Row>
+              <Row>
+                <Card.Subtitle className="mb-2 text-muted">
+                  {
+                    p.hashtags.map((hashtag) => (
+                      `#${hashtag}`
+                    ))
+                  }
+                </Card.Subtitle>
+              </Row>
+            </Card.Body>
+            <Card.Footer>
+              <small className="mb-4 text-muted">
+                <Timestamp date={p.createdAt.toDate()}/>
+              </small>
+            </Card.Footer>
+          </Card>
+        </CardGroup>
+      </Row>
+    )
+  });
+
+  return (
+    <div>
+      <Container className="justify-content-md-center">
+        {showResults}
+      </Container>
+    </div>
+  )
+}
+
+const ShowUserResults = (props) => {
+  if (props.users.length === 0) return (
+    <h4>No Results</h4>
+  )
+  console.log(props.users);
+  const showResults = props.users.map((user) => {
     const u = user.data();
     return (
       <Row key={user.id} md="12" className="d-flex justify-content-center mt-4">
@@ -113,7 +192,7 @@ const ShowUserResults = (props) => {
   return (
     <div>
       <Container className="justify-content-md-center">
-        {userResults}
+        {showResults}
       </Container>
     </div>
   )
