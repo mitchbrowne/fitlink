@@ -154,8 +154,6 @@ export const deletePost = async (postId, userId, postsCount) => {
   })
 }
 
-
-
 export const getPost = async (postId) => {
   const db = firebase.firestore();
   const postRef = db.collection('posts').doc(postId);
@@ -294,6 +292,44 @@ export const signUp = async (email, password, displayName) => {
       }).catch(function(error) {
         return error.message;
       });
+}
+
+export const isHearted = async () => {
+
+}
+
+export const addHeart = async (userSignedInId, userSignedInDisplayName, postId) => {
+  const db = firebase.firestore();
+
+  db.collection('posts').doc(postId).update({
+    heartsCount: firebase.firestore.FieldValue.increment(1)
+  });
+
+  db.collection('hearts').doc(postId).update({
+    users: firebase.firestore.FieldValue.arrayUnion({
+      userId: userSignedInId,
+      displayName: userSignedInDisplayName
+    })
+  }).then(() => {
+    console.log('Heart added');
+  });
+}
+
+export const removeHeart = async (userSignedInId, userSignedInDisplayName, postId) => {
+  const db = firebase.firestore();
+
+  db.collection('posts').doc(postId).update({
+    heartsCount: firebase.firestore.FieldValue.increment(-1)
+  });
+
+  db.collection('hearts').doc(postId).update({
+    users: firebase.firestore.FieldValue.arrayRemove({
+      userId: userSignedInId,
+      displayName: userSignedInDisplayName
+    })
+  }).then(() => {
+    console.log('Heart removed');
+  });
 }
 
 export const isFollowing = async (userId, userSignedInId) => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
-import { getPost, deletePost } from '../helpers/fireUtils';
+import { getPost, deletePost, addHeart, removeHeart } from '../helpers/fireUtils';
 import Timestamp from 'react-timestamp';
 
 import {
@@ -17,7 +17,7 @@ export default class ShowWorkout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      heartStatus: false,
+      heartStatus: true,
       postId: props.match.params.postId,
       post: null
     }
@@ -44,9 +44,19 @@ export default class ShowWorkout extends Component {
     });
   }
 
-  _handleHeart() {
+  async _handleHeart() {
     console.log('Hearted!');
     this.setState({heartStatus: !this.state.heartStatus});
+    if (!this.state.heartStatus) {
+      await addHeart(this.props.user.userId, this.props.user.displayName, this.state.postId).then(() => {
+        console.log('Heart added on show');
+      });
+    } else {
+      await removeHeart(this.props.user.userId, this.props.user.displayName, this.state.postId).then(() => {
+        console.log('Heart removed on show');
+      });
+    }
+
   }
 
   render() {
