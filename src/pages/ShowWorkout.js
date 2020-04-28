@@ -18,6 +18,7 @@ export default class ShowWorkout extends Component {
     super(props);
     this.state = {
       heartStatus: null,
+      heartsCount: null,
       postId: props.match.params.postId,
       post: null
     }
@@ -29,6 +30,8 @@ export default class ShowWorkout extends Component {
   async componentDidMount() {
     const post = await getPost(this.state.postId);
     this.setState({post: post.data()});
+    console.log(post.data());
+    this.setState({heartsCount: post.data().heartsCount});
   }
 
   async componentDidUpdate() {
@@ -58,14 +61,18 @@ export default class ShowWorkout extends Component {
   }
 
   async _handleHeart() {
-    this.setState({heartStatus: !this.state.heartStatus});
     if (!this.state.heartStatus) {
+      const newHeartsCount = this.state.heartsCount + 1;
+      this.setState({heartsCount: newHeartsCount});
       await addHeart(this.props.user.userId, this.props.user.displayName, this.state.postId).then(() => {
       });
     } else {
+      const newHeartsCount = this.state.heartsCount - 1;
+      this.setState({heartsCount: newHeartsCount});
       await removeHeart(this.props.user.userId, this.props.user.displayName, this.state.postId).then(() => {
       });
     }
+    this.setState({heartStatus: !this.state.heartStatus});
 
   }
 
@@ -83,13 +90,33 @@ export default class ShowWorkout extends Component {
             <Card>
               <Card.Img variant="top" src={this.state.post.image} alt={`${this.state.post.title} workout image`} className='workout-post-image' />
               <Card.Body>
-                <h2>{this.state.post.title}</h2>
-                <Link to={`/profile/${this.state.post.userId}`} >
-                  <h4>{this.state.post.displayName}</h4>
-                </Link>
-                <Card.Text>
-                  {this.state.post.desc}
-                </Card.Text>
+                <Row>
+                  <h2>{this.state.post.title}</h2>
+                </Row>
+                <Row>
+                  <Link to={`/profile/${this.state.post.userId}`} >
+                    <h4>{this.state.post.displayName}</h4>
+                  </Link>
+                </Row>
+                <Row>
+                  <Card.Text>
+                    {this.state.post.desc}
+                  </Card.Text>
+                </Row>
+                <Row>
+                  <Card.Text>
+                    {this.state.heartsCount} Hearts
+                  </Card.Text>
+                </Row>
+                <Row>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    {
+                      this.state.post.hashtags.map((hashtag) => (
+                        `#${hashtag}   `
+                      ))
+                    }
+                  </Card.Subtitle>
+                </Row>
                 <Row>
                   <Col>
                     <Timestamp date={this.state.post.createdAt.toDate()} />
