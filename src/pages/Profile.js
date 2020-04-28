@@ -147,14 +147,12 @@ const UserProfilePosts = (props) => {
                   </p>
 
                 </Row>
-                <Row>
-                  <Timestamp date={p.createdAt.toDate()} />
-                  <Card.Link as={Link} to="#">Like</Card.Link>
-                  <Card.Link as={Link} to="#">Comment</Card.Link>
-                  <Card.Link as={Link} to="#">Link</Card.Link>
-                </Row>
-
               </Card.Body>
+              <Card.Footer>
+                <small className="mb-4 text-muted" >
+                  <Timestamp date={p.createdAt.toDate()}/>
+                </small>
+              </Card.Footer>
             </Card>
           </div>
         </Col>
