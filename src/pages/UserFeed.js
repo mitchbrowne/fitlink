@@ -1,6 +1,6 @@
 import React, { Component, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { requestUserFeedPosts, getUserFeedPosts, isHearted } from '../helpers/fireUtils';
+import { requestUserFeedPosts, getUserFeedPosts, isHearted, addHeart, removeHeart } from '../helpers/fireUtils';
 import Timestamp from 'react-timestamp';
 
 import {
@@ -19,7 +19,8 @@ export default class UserFeed extends Component {
     this.state = {
       user: null,
       posts: null,
-      postsHeartDetails: null
+      postsHeartStatus: null,
+      postsHeartCount: null
     }
 
     this._handleHeartClick = this._handleHeartClick.bind(this);
@@ -34,19 +35,25 @@ export default class UserFeed extends Component {
     if (this.props.user !== null) {
       const getPostsData = async () => {
         const postsData = await requestUserFeedPosts(this.props.user.userId);
-        console.log(postsData.flat());
         this.setState({posts: postsData.flat()});
 
-        let newPostsHeartDetails = {};
+        let newPostsHeartCount = {};
+        let newPostsHeartStatus = {};
 
         const allPosts = postsData.flat().map((post) => {
+          const postHeartCount = {
+            [post.id]: post.data().heartsCount
+          }
+          newPostsHeartCount = Object.assign({}, postHeartCount, newPostsHeartCount);
+          this.setState({postsHeartCount: newPostsHeartCount});
+
           const getHeartStatus = () => {
             isHearted(this.props.user.userId, this.props.user.displayName, post.id).then((heartStatus) => {
-              const postHeartDetails = {
+              const postHeartStatus = {
                 [post.id]: heartStatus
               }
-              newPostsHeartDetails = Object.assign({}, postHeartDetails, newPostsHeartDetails);
-              this.setState({postsHeartDetails: newPostsHeartDetails});
+              newPostsHeartStatus = Object.assign({}, postHeartStatus, newPostsHeartStatus);
+              this.setState({postsHeartStatus: newPostsHeartStatus});
             });
           }
           getHeartStatus();
@@ -62,19 +69,25 @@ export default class UserFeed extends Component {
 
       const getPostsData = async () => {
         const postsData = await requestUserFeedPosts(this.props.user.userId);
-        console.log(postsData.flat());
         this.setState({posts: postsData.flat()});
 
-        let newPostsHeartDetails = {};
+        let newPostsHeartCount = {};
+        let newPostsHeartStatus = {};
 
         const allPosts = postsData.flat().map((post) => {
+          const postHeartCount = {
+            [post.id]: post.data().heartsCount
+          }
+          newPostsHeartCount = Object.assign({}, postHeartCount, newPostsHeartCount);
+          this.setState({postsHeartCount: newPostsHeartCount});
+
           const getHeartStatus = () => {
             isHearted(this.props.user.userId, this.props.user.displayName, post.id).then((heartStatus) => {
-              const postHeartDetails = {
+              const postHeartStatus = {
                 [post.id]: heartStatus
               }
-              newPostsHeartDetails = Object.assign({}, postHeartDetails, newPostsHeartDetails);
-              this.setState({postsHeartDetails: newPostsHeartDetails});
+              newPostsHeartStatus = Object.assign({}, postHeartStatus, newPostsHeartStatus);
+              this.setState({postsHeartStatus: newPostsHeartStatus});
             });
           }
           getHeartStatus();
@@ -84,70 +97,32 @@ export default class UserFeed extends Component {
     }
   }
 
-  // async componentDidUpdate() {
-  //   if (this.state.user === null) {
-  //     this.setState({user: this.props.user});
-  //
-  //     const getPostsData = async () => {
-  //       const postsData = await requestUserFeedPosts(this.props.user.userId);
-  //       console.log(postsData.flat());
-  //       this.setState({posts: postsData.flat()});
-  //
-  //       let newPostsHeartDetails = {};
-  //
-  //       const allPosts = Promise.all(await postsData.flat().map(async (post) => {
-  //         const getHeartStatus = async () => {
-  //           await isHearted(this.props.user.userId, this.props.user.displayName, post.id).then((heartStatus) => {
-  //             const postHeartDetails = {
-  //               [post.id]: heartStatus
-  //             }
-  //             newPostsHeartDetails = Object.assign({}, postHeartDetails, newPostsHeartDetails);
-  //             this.setState({postsHeartDetails: newPostsHeartDetails});
-  //             return Promise.resolve('ok');
-  //           });
-  //         }
-  //         await getHeartStatus();
-  //       }));
-  //     }
-  //     getPostsData();
-  //   }
-  // }
-
-  // async componentDidUpdate() {
-  //   if (this.state.user === null) {
-  //     this.setState({user: this.props.user});
-  //
-  //     const getPostsData = async () => {
-  //       const postsData = await requestUserFeedPosts(this.props.user.userId);
-  //       console.log(postsData.flat());
-  //       this.setState({posts: postsData.flat()});
-  //
-  //       let newPostsHeartDetails = {};
-  //       const allPosts = postsData.flat().map((post) => {
-  //         const postHeartDetails = {
-  //           [post.id]: true
-  //         }
-  //         newPostsHeartDetails = Object.assign({}, postHeartDetails, newPostsHeartDetails);
-  //       });
-  //       this.setState({postsHeartDetails: newPostsHeartDetails});
-  //
-  //     }
-  //
-  //     getPostsData();
-  //
-  //   }
-  // }
-
-  _handleHeartClick(postId, heartStatus) {
-    const postHeartDetails = {
+  async _handleHeartClick(postId, heartStatus) {
+    const postHeartStatus = {
       [postId]: !heartStatus
     }
-    const newPostsHeartDetails = Object.assign({}, this.state.postsHeartDetails, postHeartDetails);
-    this.setState({postsHeartDetails: newPostsHeartDetails});
+    const newPostsHeartStatus = Object.assign({}, this.state.postsHeartStatus, postHeartStatus);
+    this.setState({postsHeartStatus: newPostsHeartStatus});
+
+    let newHeartCount;
+
+    if (!heartStatus) {
+      newHeartCount = {[postId]: this.state.postsHeartCount[postId] + 1};
+      await addHeart(this.props.user.userId, this.props.user.displayName, postId).then(() => {
+      });
+    } else {
+      newHeartCount = {[postId]: this.state.postsHeartCount[postId] - 1};
+      await removeHeart(this.props.user.userId, this.props.user.displayName, postId).then(() => {
+      });
+    }
+
+    const newPostsHeartCount = Object.assign({}, this.state.postsHeartCount, newHeartCount)
+    this.setState({postsHeartCount: newPostsHeartCount});
+
   }
 
   render() {
-    if (this.state.user === null || this.state.posts === null || this.state.postsHeartDetails === null) return (
+    if (this.state.user === null || this.state.posts === null || this.state.postsHeartStatus === null) return (
       <Spinner animation="border" role="status">
         <span className="sr-only">Loading...</span>
       </Spinner>
@@ -156,7 +131,12 @@ export default class UserFeed extends Component {
     return (
       <div>
         <Container className="justify-content-md-center">
-          <UserFeedPosts posts={this.state.posts} postsHeartDetails={this.state.postsHeartDetails} handleHeartClick={this._handleHeartClick}/>
+          <UserFeedPosts
+            posts={this.state.posts}
+            postsHeartStatus={this.state.postsHeartStatus}
+            postsHeartCount={this.state.postsHeartCount}
+            handleHeartClick={this._handleHeartClick}
+          />
         </Container>
       </div>
     )
@@ -205,12 +185,12 @@ const UserFeedPosts = (props) => {
               </Row>
               <Row>
                 <Card.Text>
-                  {p.heartsCount} Hearts
+                  {props.postsHeartCount[pId]} Hearts
                 </Card.Text>
               </Row>
               <Row>
-                <Card.Link as={Link} to="#" name={pId} onClick={(e) => {_handleHeartClick(e, props.postsHeartDetails[pId])}}>{
-                  props.postsHeartDetails[pId]
+                <Card.Link as={Link} to="#" name={pId} onClick={(e) => {_handleHeartClick(e, props.postsHeartStatus[pId])}}>{
+                  props.postsHeartStatus[pId]
                   ? ('Unlike')
                   : ('Like')
                 }</Card.Link>
