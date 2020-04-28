@@ -141,7 +141,9 @@ const UserProfilePosts = (props) => {
                   <p>
                     {
                       hashtags.map((hashtag) => (
-                        `#${hashtag}   `
+                        <Link to={`/explore/2/${hashtag}`}>
+                          #{hashtag}
+                        </Link>
                       ))
                     }
                   </p>

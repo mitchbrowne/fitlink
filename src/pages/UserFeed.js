@@ -178,7 +178,9 @@ const UserFeedPosts = (props) => {
                 <Card.Subtitle className="mb-2 text-muted">
                   {
                     p.hashtags.map((hashtag) => (
-                      `#${hashtag}   `
+                      <Link to={`/explore/2/${hashtag}`}>
+                        #{hashtag}
+                      </Link>
                     ))
                   }
                 </Card.Subtitle>
@@ -194,8 +196,7 @@ const UserFeedPosts = (props) => {
                   ? ('Unlike')
                   : ('Like')
                 }</Card.Link>
-                <Card.Link as={Link} to="#">Comment</Card.Link>
-                <Card.Link as={Link} to="#">Link</Card.Link>
+                <Card.Link href={`${p.link}`} target="_blank">Link</Card.Link>
               </Row>
             </Card.Body>
             <Card.Footer>

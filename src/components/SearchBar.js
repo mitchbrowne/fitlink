@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'underscore';
 import InputTag from './InputTag';
 
@@ -17,7 +17,12 @@ export default (props) => {
   const pageLoadTerm = _.sample(['#HIIT', '#20min', '#burn', '#sweat', '#30min', '#outdoor', '#balance']);
   const [placeholder, setPlaceholder] = useState(pageLoadTerm);
   const [searchValue, setSearchValue] = useState('');
-  const [searchType, setSearchType] = useState(1);
+  const [searchType, setSearchType] = useState(props.searchType);
+
+  useEffect(() => {
+    setSearchType(props.searchType);
+    setSearchValue(props.searchValue);
+  }, [props])
 
   const _handleToggle = (e) => {
     const val = e.target.value;
@@ -45,7 +50,7 @@ export default (props) => {
   const _handleHashtags = (hashtagsData) => {
     console.log(hashtagsData);
     setSearchValue(hashtagsData);
-    // props.handleSearchSubmit(hashtagsData, searchType);
+    props.handleSearchSubmit(hashtagsData, searchType);
   }
 
   const _handleSubmit = (e) => {
@@ -66,7 +71,7 @@ export default (props) => {
                 </Form.Label>
                 <Col>
                   {(searchType === 2)
-                    ? <InputTag handleHashtags={_handleHashtags} hashtags=''/>
+                    ? <InputTag handleHashtags={_handleHashtags} hashtags={searchValue}/>
                     : <Form.Control type="search" value={searchValue} placeholder={placeholder} onChange={(e) => {setSearchValue(e.target.value)}}/>
                   }
                 </Col>
@@ -83,7 +88,7 @@ export default (props) => {
 
       <Row className="justify-content-md-center">
         <Col md="4">
-          <ToggleButtonGroup type="radio" name="options" defaultValue={1} aria-label="Buttons for search">
+          <ToggleButtonGroup type="radio" name="options" defaultValue={searchType} aria-label="Buttons for search">
             <ToggleButton value={1} onClick={_handleToggle} variant="outline-secondary">Top</ToggleButton>
             <ToggleButton value={2} onClick={_handleToggle} variant="outline-secondary">Tags</ToggleButton>
             <ToggleButton value={3} onClick={_handleToggle} variant="outline-secondary">Categories</ToggleButton>

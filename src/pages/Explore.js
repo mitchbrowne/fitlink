@@ -16,17 +16,29 @@ import {
 } from 'react-bootstrap';
 
 export default class Explore extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       searchLoading: false,
-      searchValues: '',
+      searchValue: '',
       searchType: 1,
       userSearchResults: [],
       hashtagSearchResults: [],
     }
 
     this._handleSearchSubmit = this._handleSearchSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    const searchType = this.props.match.params.searchType;
+    let searchValue = [this.props.match.params.searchValue];
+
+    if (searchType) {
+      this.setState({searchType: parseInt(searchType)});
+      this.setState({searchValue})
+      this._handleSearchSubmit(searchValue, parseInt(searchType));
+    }
+
   }
 
   async _handleSearchSubmit(searchValue, searchType) {
@@ -36,7 +48,7 @@ export default class Explore extends Component {
     if (searchType === 2) {
       this.setState({searchLoading: true});
       this.setState({searchType: searchType});
-      this.setState({searchValues: searchValue});
+      this.setState({searchValue: searchValue});
       const hashtagSearchResults = await queryHashtags(searchValue);
       console.log(hashtagSearchResults);
       this.setState({hashtagSearchResults: hashtagSearchResults});
@@ -46,7 +58,7 @@ export default class Explore extends Component {
     if (searchType === 4) {
       this.setState({searchLoading: true});
       this.setState({searchType: searchType});
-      this.setState({searchValues: searchValue});
+      this.setState({searchValue: searchValue});
       if (searchValue.startsWith('@')) (searchValue = searchValue.slice(1));
       const userSearchResults = await queryUsers(searchValue);
       this.setState({userSearchResults: userSearchResults});
@@ -61,10 +73,10 @@ export default class Explore extends Component {
           <h1>
             Explore
           </h1>
-          <SearchBar handleSearchSubmit={this._handleSearchSubmit} />
+          <SearchBar searchType={this.state.searchType} searchValue={this.state.searchValue} handleSearchSubmit={this._handleSearchSubmit} />
           <SearchContent
             searchLoading={this.state.searchLoading}
-            searchValue={this.state.searchValues}
+            searchValue={this.state.searchValue}
             users={this.state.userSearchResults}
             hashtagResults={this.state.hashtagSearchResults}
             searchType={this.state.searchType}
@@ -130,7 +142,9 @@ const ShowHashtagResults = (props) => {
                 <Card.Subtitle className="mb-2 text-muted">
                   {
                     p.hashtags.map((hashtag) => (
-                      `#${hashtag}`
+                      <Link to={`/explore/2/${hashtag}`}>
+                        #{hashtag}
+                      </Link>
                     ))
                   }
                 </Card.Subtitle>

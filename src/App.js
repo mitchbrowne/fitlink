@@ -93,7 +93,7 @@ export default class App extends Component {
             />
             <Route
               exact
-              path="/explore"
+              path="/explore/:searchType?/:searchValue?"
               render={(props) => (
                 <Explore {...props} user={this.state.user} />
               )}

@@ -112,7 +112,9 @@ export default class ShowWorkout extends Component {
                   <Card.Subtitle className="mb-2 text-muted">
                     {
                       this.state.post.hashtags.map((hashtag) => (
-                        `#${hashtag}   `
+                        <Link to={`/explore/2/${hashtag}`}>
+                          #{hashtag}
+                        </Link>
                       ))
                     }
                   </Card.Subtitle>
@@ -127,7 +129,6 @@ export default class ShowWorkout extends Component {
                       ? ('Unlike')
                       : ('Like')
                     }</Card.Link>
-                    <Card.Link as={Link} to="#">Comment</Card.Link>
                     <Card.Link href={`${this.state.post.link}`} target="_blank">Link</Card.Link>
                   </Col>
                   <Col>
