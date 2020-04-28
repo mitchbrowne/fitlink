@@ -294,7 +294,24 @@ export const signUp = async (email, password, displayName) => {
       });
 }
 
-export const isHearted = async () => {
+export const isHearted = async (userSignedInId, userSignedInDisplayName, postId) => {
+  const db = firebase.firestore();
+  const heartRef = db.collection('hearts').doc(postId);
+  return heartRef.get().then((doc) => {
+    console.log(doc.data().users);
+    if (!doc.data().users) {
+      return false;
+    }
+    console.log({userId: userSignedInId, displayName: userSignedInDisplayName});
+    let result = doc.data().users.find(user => user.userId === userSignedInId);
+    if (result) {
+      console.log(result);
+      return true;
+    }
+    return false;
+    });
+
+
 
 }
 
@@ -339,11 +356,11 @@ export const isFollowing = async (userId, userSignedInId) => {
     if (!doc.data()) {
       return false;
     }
-      if (userId in doc.data()) {
-        console.log(userId);
-        return true;
-      }
-      return false;
+    if (userId in doc.data()) {
+      console.log(userId);
+      return true;
+    }
+    return false;
     });
 }
 

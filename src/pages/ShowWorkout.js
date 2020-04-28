@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
-import { getPost, deletePost, addHeart, removeHeart } from '../helpers/fireUtils';
+import { getPost, deletePost, isHearted, addHeart, removeHeart } from '../helpers/fireUtils';
 import Timestamp from 'react-timestamp';
 
 import {
@@ -17,7 +17,7 @@ export default class ShowWorkout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      heartStatus: true,
+      heartStatus: null,
       postId: props.match.params.postId,
       post: null
     }
@@ -28,16 +28,29 @@ export default class ShowWorkout extends Component {
 
   async componentDidMount() {
     const post = await getPost(this.state.postId);
-    console.log(post.data());
     this.setState({post: post.data()});
+  }
+
+  async componentDidUpdate() {
+    if (this.props.user === null) return;
+
+    if (this.state.heartStatus === null) {
+
+      const getHeartStatus = async () => {
+        isHearted(this.props.user.userId, this.props.user.displayName, this.state.postId).then((heartStatus) => {
+          this.setState({heartStatus: heartStatus});
+        });
+      }
+
+      getHeartStatus();
+
+    }
   }
 
   async _handleDeletePost() {
     const sure = window.confirm('Are you sure?');
     if (!sure) return;
-    console.log('First Count: ', this.props.user.postsCount);
     const deleteData = await deletePost(this.state.postId, this.state.post.userId, this.props.user.postsCount).then(async () => {
-      console.log(this.props.user.postsCount);
       this.props.fetchUpdatedUser(this.props.user.userId);
 
       this.props.history.push(`/profile/${this.state.post.userId}`);
@@ -45,15 +58,12 @@ export default class ShowWorkout extends Component {
   }
 
   async _handleHeart() {
-    console.log('Hearted!');
     this.setState({heartStatus: !this.state.heartStatus});
     if (!this.state.heartStatus) {
       await addHeart(this.props.user.userId, this.props.user.displayName, this.state.postId).then(() => {
-        console.log('Heart added on show');
       });
     } else {
       await removeHeart(this.props.user.userId, this.props.user.displayName, this.state.postId).then(() => {
-        console.log('Heart removed on show');
       });
     }
 
