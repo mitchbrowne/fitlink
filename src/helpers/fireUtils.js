@@ -183,6 +183,22 @@ export const getUsers = async () => {
   });
 }
 
+export const queryUsers = async (searchValue) => {
+  const db = firebase.firestore();
+  const usersRef = db.collection('users').where('displayName', '==', searchValue);
+
+  return await usersRef.get().then(users => {
+    let allUsers = [];
+    users.forEach(doc => {
+      console.log(doc.data());
+      allUsers.push(doc);
+    });
+    return allUsers;
+  }).catch((error) => {
+    console.log(error.message);
+  });
+}
+
 export const updateSettings = async (email, displayName, bio, photoURL) => {
   const user = firebase.auth().currentUser;
 

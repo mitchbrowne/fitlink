@@ -1,4 +1,5 @@
 import React, { Component, useState, useEffect, useRef } from 'react';
+import _ from 'underscore';
 
 import {
   Form,
@@ -7,16 +8,20 @@ import {
 } from 'react-bootstrap';
 
 export default (props) => {
-
+  const pageLoadTerm = _.sample(['#HIIT', '#20min', '#burn', '#sweat', '#30min', '#outdoor', '#balance']);
+  const [placeholder, setPlaceholder] = useState(pageLoadTerm);
   const [hashtags, setHashtags] = useState([]);
   const hashtagInputRef = useRef();
 
   const _handleAddHashtag = (e) => {
     e.preventDefault();
-    const val = e.target.value;
+    let val = e.target.value.trim();
     if (e.key === 'Enter' && val) {
       if (hashtags.find(hashtag => hashtag.toLowerCase() === val.toLowerCase())) {
         return;
+      }
+      if (val.startsWith('#')) {
+        val = val.slice(1);
       }
       props.handleHashtags(hashtags.concat(val))
       setHashtags(hashtags.concat(val));
@@ -50,23 +55,7 @@ export default (props) => {
               <Button key={hashtag} variant="outline-secondary" onClick={() => {_handleRemoveHashtag(i)}}>#{hashtag}</Button>
           ))}
         </InputGroup.Prepend>
-        <Form.Control type="text" onKeyUp={_handleAddHashtag} ref={hashtagInputRef}/>
+        <Form.Control type="search" placeholder={placeholder} onKeyUp={_handleAddHashtag} ref={hashtagInputRef}/>
       </InputGroup>
   )
 }
-
-{/* <div className="input-tag">
-  <ul className="input-tag__tags">
-    {hashtags.map((hashtag, i) => (
-      <li key={hashtag}>
-        #{hashtag}
-        <button type="button" onClick={() => {_handleRemoveHashtag(i)}}>Remove</button>
-      </li>
-    ))}
-
-
-    <li className="input-tag__tags__input">
-      <Form.Control type="text" onKeyUp={_handleAddHashtag} ref={hashtagInputRef}/>
-    </li>
-  </ul>
-</div> */}
