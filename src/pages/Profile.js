@@ -47,11 +47,11 @@ export default class Profile extends Component {
   _handleFollowChange() {
     console.log('Follow Change');
     if (this.state.following) {
-      removeFollowing(this.state.userId, this.props.user.userId);
+      removeFollowing(this.state.userId, this.state.userProfile.displayName, this.state.userProfile.photoURL, this.props.user.userId, this.props.user.displayName, this.props.user.photoURL);
       const newFollowersCount = this.state.followersCount - 1;
       this.setState({followersCount: newFollowersCount});
     } else {
-      addFollowing(this.state.userId, this.props.user.userId);
+      addFollowing(this.state.userId, this.state.userProfile.displayName, this.state.userProfile.photoURL, this.props.user.userId, this.props.user.displayName, this.props.user.photoURL);
       const newFollowersCount = this.state.followersCount + 1;
       this.setState({followersCount: newFollowersCount});
     }

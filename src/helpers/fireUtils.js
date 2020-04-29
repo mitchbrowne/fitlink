@@ -352,18 +352,20 @@ export const isFollowing = async (userId, userSignedInId) => {
   const db = firebase.firestore();
   const followingRef = db.collection('following').doc(userSignedInId);
   return followingRef.get().then((doc) => {
-    if (!doc.data()) {
+    if (!doc.data().users) {
       return false;
     }
-    if (userId in doc.data()) {
+    let result = doc.data().users.find(user => user.userId === userId);
+    if (result) {
       console.log(userId);
       return true;
     }
     return false;
     });
+
 }
 
-export const addFollowing = async (userId, userSignedInId) => {
+export const addFollowing = async (userId, userDisplayName, userPhotoURL, userSignedInId, userSignedInDisplayName, userSignedInPhotoURL) => {
   const db = firebase.firestore();
 
   db.collection('users').doc(userSignedInId).update({
@@ -374,21 +376,29 @@ export const addFollowing = async (userId, userSignedInId) => {
     followersCount: firebase.firestore.FieldValue.increment(1)
   });
 
-  db.collection('following').doc(userSignedInId).set({
-    [userId]: true
-  }, {merge: true}).then(function() {
+  db.collection('following').doc(userSignedInId).update({
+    users: firebase.firestore.FieldValue.arrayUnion({
+      userId: userId,
+      displayName: userDisplayName,
+      photoURL: userPhotoURL
+    })
+  }).then(function() {
     console.log('Added following');
   });
 
   db.collection('followers').doc(userId).set({
-    [userSignedInId]: true
-  }).then(function() {
+    users: firebase.firestore.FieldValue.arrayUnion({
+      userId: userSignedInId,
+      displayName: userSignedInDisplayName,
+      photoURL: userSignedInPhotoURL
+    })
+  }, {merge: true}).then(function() {
     console.log('Added to followers');
   });
 
 }
 
-export const removeFollowing = async (userId, userSignedInId) => {
+export const removeFollowing = async (userId, userDisplayName, userPhotoURL, userSignedInId, userSignedInDisplayName, userSignedInPhotoURL) => {
   const db = firebase.firestore();
 
   db.collection('users').doc(userSignedInId).update({
@@ -400,7 +410,11 @@ export const removeFollowing = async (userId, userSignedInId) => {
   });
 
   db.collection('following').doc(userSignedInId).update({
-    [userId]: firebase.firestore.FieldValue.delete()
+    users: firebase.firestore.FieldValue.arrayRemove({
+      userId: userId,
+      displayName: userDisplayName,
+      photoURL: userPhotoURL
+    })
   }).then(function() {
     console.log('Deleted following');
   });
