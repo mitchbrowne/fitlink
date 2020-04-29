@@ -17,7 +17,7 @@ export default (props) => {
   const [desc, setDesc] = useState('Really hard stuff');
   const [image, setImage] = useState('https://i.ytimg.com/vi/yRCUfumiqhk/maxresdefault.jpg');
   const [hashtags, setHashtags] = useState(['Test it']);
-  const [tagged, setTagged] = useState(['Liv']);
+  const [tagged, setTagged] = useState([]);
   const [link, setLink] = useState('https://www.youtube.com/watch?v=yRCUfumiqhk');
 
   const _handleSubmit = async (e) => {
@@ -108,7 +108,7 @@ export default (props) => {
               </Form.Group>
               <Form.Group controlId="tagged">
                 <Form.Label>Tag Friends</Form.Label>
-                <InputTagged handleTagged={_handleTagged} tagged={tagged}/>
+                <InputTagged handleTagged={_handleTagged} tagged={tagged} user={props.user}/>
               </Form.Group>
               <Form.Group controlId="tags">
                 <Form.Label>Tags</Form.Label>

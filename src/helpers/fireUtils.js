@@ -426,3 +426,21 @@ export const removeFollowing = async (userId, userDisplayName, userPhotoURL, use
     console.log('Deleted follower');
   })
 }
+
+export const getUsersFollowing = async (userSignedInId) => {
+  const db = firebase.firestore();
+  const userRef = db.collection('following').doc(userSignedInId);
+  let followingUsers = [];
+
+  return await userRef.get().then((doc) => {
+    if (!doc.data()) {
+      followingUsers = [];
+      return;
+    }
+    const userIds = doc.data().users.map((user) => {
+      followingUsers.push(user);
+    });
+    console.log(followingUsers);
+    return followingUsers;
+  });
+}

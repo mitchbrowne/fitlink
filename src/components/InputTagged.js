@@ -1,5 +1,6 @@
 import React, { Component, useState, useEffect, useRef } from 'react';
 import _ from 'underscore';
+import { getUsersFollowing } from '../helpers/fireUtils';
 
 import {
   Form,
@@ -42,6 +43,12 @@ export default (props) => {
       console.log(Array.from(props.tagged));
       let taggedData = Array.from(props.tagged);
       setTagged(taggedData);
+    }
+
+    if (props.user !== null) {
+      getUsersFollowing(props.user.userId).then((data) => {
+      });
+
     }
 
   }, [props])
