@@ -89,9 +89,9 @@ export default (props) => {
       <Row className="justify-content-md-center">
         <Col md="4">
           <ToggleButtonGroup type="radio" name="options" defaultValue={searchType} aria-label="Buttons for search">
-            <ToggleButton value={1} onClick={_handleToggle} variant="outline-secondary">Top</ToggleButton>
+            {/* <ToggleButton value={1} onClick={_handleToggle} variant="outline-secondary">Top</ToggleButton> */}
             <ToggleButton value={2} onClick={_handleToggle} variant="outline-secondary">Tags</ToggleButton>
-            <ToggleButton value={3} onClick={_handleToggle} variant="outline-secondary">Categories</ToggleButton>
+            {/* <ToggleButton value={3} onClick={_handleToggle} variant="outline-secondary">Categories</ToggleButton> */}
             <ToggleButton value={4} onClick={_handleToggle} variant="outline-secondary">Accounts</ToggleButton>
           </ToggleButtonGroup>
         </Col>

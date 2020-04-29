@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import firebase from 'firebase';
 import { getUser, getUserPosts, isFollowing, addFollowing, removeFollowing, getUserTaggedPosts, getUserFollowers, getUserFollowing } from '../helpers/fireUtils';
 import Timestamp from 'react-timestamp';
-// import ProfileContent from '../components/ProfileContent';
+import _ from 'underscore';
 
 import {
   Container,
@@ -187,7 +187,13 @@ const ProfileContent = (props) => {
 
   if (props.view === 'posts') {
     return (
-      <UserProfilePosts posts={props.posts} />
+      <div>
+        <h3>Posts</h3>
+        {_.isEmpty(props.posts)
+          ? <p>No posts</p>
+          : <UserProfilePosts posts={props.posts} />
+        }
+      </div>
     )
   }
 
@@ -196,7 +202,10 @@ const ProfileContent = (props) => {
     return (
       <div>
         <h3>Following</h3>
-        <UserProfileFollow followData={props.followingData} />
+        {_.isEmpty(props.followingData)
+          ? <p>No following</p>
+          : <UserProfileFollow followData={props.followingData} />
+        }
       </div>
     )
   }
@@ -206,7 +215,10 @@ const ProfileContent = (props) => {
     return (
       <div>
         <h3>Followers</h3>
-        <UserProfileFollow followData={props.followersData} />
+        {_.isEmpty(props.followersData)
+          ? <p>No followers</p>
+          : <UserProfileFollow followData={props.followersData} />
+        }
       </div>
     )
   }
@@ -216,7 +228,10 @@ const ProfileContent = (props) => {
     return (
       <div>
         <h3>Tagged</h3>
-        <UserProfileTagged taggedData={props.taggedData} />
+        {_.isEmpty(props.taggedData)
+          ? <p>No tagged posts</p>
+          : <UserProfileTagged taggedData={props.taggedData} />
+        }
       </div>
     )
   }
@@ -279,8 +294,6 @@ const UserProfileHeader = (props) => {
           </Row>
         </Col>
       </Row>
-
-
     </div>
   )
 }
@@ -329,7 +342,6 @@ const UserProfilePosts = (props) => {
 
   return(
     <div>
-      <h1>Posts</h1>
       <Container>
         <Row>
           {userPosts}
