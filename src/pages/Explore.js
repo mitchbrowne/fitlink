@@ -141,6 +141,17 @@ const ShowHashtagResults = (props) => {
               <Row>
                 <Card.Subtitle className="mb-2 text-muted">
                   {
+                    p.tagged.map((user) => (
+                      <Link to={`/profile/${user.userId}`}>
+                        @{user.displayName}
+                      </Link>
+                    ))
+                  }
+                </Card.Subtitle>
+              </Row>
+              <Row>
+                <Card.Subtitle className="mb-2 text-muted">
+                  {
                     p.hashtags.map((hashtag) => (
                       <Link to={`/explore/2/${hashtag}`}>
                         #{hashtag}

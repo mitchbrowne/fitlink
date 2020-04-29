@@ -120,6 +120,17 @@ export default class ShowWorkout extends Component {
                   </Card.Subtitle>
                 </Row>
                 <Row>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    {
+                      this.state.post.tagged.map((user) => (
+                        <Link to={`/profile/${user.userId}`}>
+                          @{user.displayName}
+                        </Link>
+                      ))
+                    }
+                  </Card.Subtitle>
+                </Row>
+                <Row>
                   <Col>
                     <Timestamp date={this.state.post.createdAt.toDate()} />
                   </Col>
