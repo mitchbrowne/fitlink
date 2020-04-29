@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import InputTagged from '../components/InputTagged';
 import InputTag from '../components/InputTag';
 import { newPost } from '../helpers/fireUtils';
 
@@ -16,7 +17,7 @@ export default (props) => {
   const [desc, setDesc] = useState('Really hard stuff');
   const [image, setImage] = useState('https://i.ytimg.com/vi/yRCUfumiqhk/maxresdefault.jpg');
   const [hashtags, setHashtags] = useState(['Test it']);
-  const [friends, setFriends] = useState('');
+  const [tagged, setTagged] = useState(['Liv']);
   const [link, setLink] = useState('https://www.youtube.com/watch?v=yRCUfumiqhk');
 
   const _handleSubmit = async (e) => {
@@ -43,6 +44,11 @@ export default (props) => {
       props.fetchUpdatedUser(props.user.userId);
       props.history.push(`/workouts/show/${data.id}`);
     });
+  }
+
+  const _handleTagged = (taggedData) => {
+    setTagged(taggedData);
+    console.log(taggedData);
   }
 
   const _handleHashtags = (hashtagsData) => {
@@ -99,6 +105,10 @@ export default (props) => {
                   value={link}
                   onChange={(e) => {setLink(e.target.value)}}
                  />
+              </Form.Group>
+              <Form.Group controlId="tagged">
+                <Form.Label>Tag Friends</Form.Label>
+                <InputTagged handleTagged={_handleTagged} tagged={tagged}/>
               </Form.Group>
               <Form.Group controlId="tags">
                 <Form.Label>Tags</Form.Label>
