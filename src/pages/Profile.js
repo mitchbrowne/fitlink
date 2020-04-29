@@ -175,7 +175,10 @@ const ProfileContent = (props) => {
   if (props.view === 'tagged') {
     console.log(props.taggedData);
     return (
-      <h3>Tagged</h3>
+      <div>
+        <h3>Tagged</h3>
+        <UserProfileTagged taggedData={props.taggedData} />
+      </div>
     )
   }
 
@@ -318,6 +321,73 @@ const UserProfileFollow = (props) => {
       <Container>
         <Row>
           {follow}
+        </Row>
+      </Container>
+    </div>
+  )
+}
+
+const UserProfileTagged = (props) => {
+  const tagged = props.taggedData.map((taggedPost) => {
+    const t = taggedPost.data();
+    console.log(taggedPost.id);
+    console.log(t);
+    return (
+      <Col className="mb-4" lg={4} key={taggedPost.id}>
+        <div>
+          <Card>
+            <Card.Img variant="top" src={t.image} alt={`${t.title} tagged image`} className='tagged-image' />
+            <Card.Body>
+              <Row>
+                <Link to={`/workouts/show/${taggedPost.id}`}>
+                <h4>{t.title}</h4>
+                </Link>
+              </Row>
+              <Row>
+                <Link to={`/profile/${t.userId}`}>
+                  <Card.Subtitle className="mb-4 text-muted">{t.displayName}</Card.Subtitle>
+                </Link>
+              </Row>
+              <Row>
+                <p>
+                  {
+                    t.tagged.map((taggedUser) => (
+                      <Link to={`/profile/${taggedUser.userId}`}>
+                        @{taggedUser.displayName}
+                      </Link>
+                    ))
+                  }
+                </p>
+              </Row>
+              <Row>
+                <p>
+                  {
+                    t.hashtags.map((hashtag) => (
+                      <Link to={`/explore/2/${hashtag}`}>
+                        #{hashtag}
+                      </Link>
+                    ))
+                  }
+                </p>
+
+              </Row>
+            </Card.Body>
+            <Card.Footer>
+              <small className="mb-4 text-muted" >
+                <Timestamp date={t.createdAt.toDate()}/>
+              </small>
+            </Card.Footer>
+          </Card>
+        </div>
+      </Col>
+    )
+  })
+
+  return (
+    <div>
+      <Container>
+        <Row>
+          {tagged}
         </Row>
       </Container>
     </div>
