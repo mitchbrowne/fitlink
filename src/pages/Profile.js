@@ -73,6 +73,10 @@ export default class Profile extends Component {
       this.setState({following: isFollowingBool});
 
       this.setState({view: 'posts'});
+      this.setState({followingData: null});
+      this.setState({followersData: null});
+      this.setState({taggedData: null});
+
       this.setState({searchLoading: false});
     }
   }

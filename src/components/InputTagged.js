@@ -48,7 +48,7 @@ export default (props) => {
   }
 
   useEffect(() => {
-    if (props.tagged !== '') {
+    if (props.tagged !== '' && props.tagged !== null) {
       console.log(Array.from(props.tagged));
       let taggedData = Array.from(props.tagged);
       setTagged(taggedData);

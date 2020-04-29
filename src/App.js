@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 import firebase from 'firebase';
 import { getUser } from './helpers/fireUtils';
 
+import Permission from './components/Permission';
 import Layout from './components/Layout';
 
 import Home from './pages/Home';
@@ -86,61 +87,61 @@ export default class App extends Component {
                 <Home {...props} user={this.state.user} />
               )}
             />
-            <Route
-              exact
-              path="/feed"
-              render={(props) => (
-                <UserFeed {...props} user={this.state.user} />
-              )}
-            />
-            <Route
-              exact
-              path="/explore/:searchType?/:searchValue?"
-              render={(props) => (
-                <Explore {...props} user={this.state.user} />
-              )}
-            />
-            <Route
-              exact
-              path="/users"
-              render={(props) => (
-                <Users {...props} user={this.state.user} />
-              )}
-            />
-            <Route
-              exact
-              path="/settings"
-              render={(props) => (
-                <Settings {...props} user={this.state.user} fetchUpdatedUser={this._fetchUpdatedUser}/>
-              )}
-               />
-            <Route
-
-              path="/profile/:userId"
-              render={(props) => (
-                <Profile {...props} user={this.state.user} />
-              )}
-            />
-
-            <Route
-              exact
-              path="/workouts/new"
-              render={(props) => (
-                <NewWorkout {...props} user={this.state.user} fetchUpdatedUser={this._fetchUpdatedUser}/>
-              )}
-            />
-            <Route
-              path="/workouts/show/:postId"
-              render={(props) => (
-                <ShowWorkout {...props} user={this.state.user} fetchUpdatedUser={this._fetchUpdatedUser}/>
-              )}
-            />
-            <Route
-              path="/workouts/edit/:postId"
-              render={(props) => (
-                <EditWorkout {...props} user={this.state.user} />
-              )}
-            />
+            <Permission {...this.props} user={this.state.user}>
+              <Route
+                exact
+                path="/feed"
+                render={(props) => (
+                  <UserFeed {...props} user={this.state.user} />
+                )}
+              />
+              <Route
+                exact
+                path="/explore/:searchType?/:searchValue?"
+                render={(props) => (
+                  <Explore {...props} user={this.state.user} />
+                )}
+              />
+              <Route
+                exact
+                path="/users"
+                render={(props) => (
+                  <Users {...props} user={this.state.user} />
+                )}
+              />
+              <Route
+                exact
+                path="/settings"
+                render={(props) => (
+                  <Settings {...props} user={this.state.user} fetchUpdatedUser={this._fetchUpdatedUser}/>
+                )}
+                 />
+              <Route
+                path="/profile/:userId"
+                render={(props) => (
+                  <Profile {...props} user={this.state.user}/>
+                )}
+              />
+              <Route
+                exact
+                path="/workouts/new"
+                render={(props) => (
+                  <NewWorkout {...props} user={this.state.user} fetchUpdatedUser={this._fetchUpdatedUser}/>
+                )}
+              />
+              <Route
+                path="/workouts/show/:postId"
+                render={(props) => (
+                  <ShowWorkout {...props} user={this.state.user} fetchUpdatedUser={this._fetchUpdatedUser}/>
+                )}
+              />
+              <Route
+                path="/workouts/edit/:postId"
+                render={(props) => (
+                  <EditWorkout {...props} user={this.state.user}/>
+                )}
+              />
+            </Permission>
             <Route
               exact
               path="/signup"
@@ -148,7 +149,10 @@ export default class App extends Component {
                 <Signup {...props}/>
               )}
             />
-            <Route exact path="/signin" component={Signin} />
+            <Route
+              exact
+              path="/signin"
+              component={Signin}/>
           </Layout>
         </div>
       </Router>
