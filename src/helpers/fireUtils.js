@@ -424,13 +424,13 @@ export const addFollowing = async (userId, userDisplayName, userPhotoURL, userSi
     followersCount: firebase.firestore.FieldValue.increment(1)
   });
 
-  db.collection('following').doc(userSignedInId).update({
+  db.collection('following').doc(userSignedInId).set({
     users: firebase.firestore.FieldValue.arrayUnion({
       userId: userId,
       displayName: userDisplayName,
       photoURL: userPhotoURL
     })
-  }).then(function() {
+  }, {merge: true}).then(function() {
     console.log('Added following');
   });
 
@@ -467,7 +467,13 @@ export const removeFollowing = async (userId, userDisplayName, userPhotoURL, use
     console.log('Deleted following');
   });
 
-  db.collection('followers').doc(userId).delete().then(function() {
+  db.collection('followers').doc(userId).update({
+    users: firebase.firestore.FieldValue.arrayRemove({
+      userId: userSignedInId,
+      displayName: userSignedInDisplayName,
+      photoURL: userSignedInPhotoURL
+    })
+  }).then(function() {
     console.log('Deleted follower');
   })
 }
