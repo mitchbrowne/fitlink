@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect, useRef } from 'react';
 import _ from 'underscore';
-import { getUsersFollowing } from '../helpers/fireUtils';
+import Select from 'react-select';
+import { getUsersFollowingSelect } from '../helpers/fireUtils';
 
 import {
   Form,
@@ -9,6 +10,14 @@ import {
 } from 'react-bootstrap';
 
 export default (props) => {
+  const [selectedOption, setSelectedOption] = useState();
+  const [searchList, setSearchList] = useState(
+    [
+      { value: 'chocolate', label: 'Chocolate' },
+      { value: 'strawberry', label: 'Strawberry' },
+      { value: 'vanilla', label: 'Vanilla' }
+    ]
+  );
   const [placeholder, setPlaceholder] = useState('@');
   const [tagged, setTagged] = useState([]);
   const taggedInputRef = useRef();
@@ -46,22 +55,41 @@ export default (props) => {
     }
 
     if (props.user !== null) {
-      getUsersFollowing(props.user.userId).then((data) => {
+      getUsersFollowingSelect(props.user.userId).then((data) => {
+        console.log(data);
+        setSearchList(data);
       });
 
     }
 
   }, [props])
 
+  const handleChange = (selectedOption) => {
+    console.log('Handled...');
+    setSelectedOption(selectedOption);
+    console.log(selectedOption);
+    props.handleTagged(selectedOption);
+  }
 
   return (
-      <InputGroup>
-        <InputGroup.Prepend>
-          {tagged.map((tagged, i) => (
-              <Button key={tagged} variant="outline-secondary" onClick={() => {_handleRemoveTagged(i)}}>@{tagged}</Button>
-          ))}
-        </InputGroup.Prepend>
-        <Form.Control type="search" placeholder={placeholder} onKeyUp={_handleAddTagged} ref={taggedInputRef}/>
-      </InputGroup>
+    <Select
+      value={selectedOption}
+      options={searchList}
+      onChange={handleChange}
+      isMulti
+      placeholder="Search..."
+      openMenuOnClick={false}
+     />
   )
 }
+
+// return (
+//     <InputGroup>
+//       <InputGroup.Prepend>
+//         {tagged.map((tagged, i) => (
+//             <Button key={tagged} variant="outline-secondary" onClick={() => {_handleRemoveTagged(i)}}>@{tagged}</Button>
+//         ))}
+//       </InputGroup.Prepend>
+//       <Form.Control type="search" placeholder={placeholder} onKeyUp={_handleAddTagged} ref={taggedInputRef}/>
+//     </InputGroup>
+// )

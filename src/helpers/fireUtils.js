@@ -70,6 +70,7 @@ export const newPost = async (postDetails) => {
     image: postDetails.image,
     link: postDetails.link,
     hashtags: postDetails.hashtags,
+    tagged: postDetails.tagged,
     heartsCount: 0,
     createdAt: firebase.firestore.Timestamp.fromDate(new Date())
   }).then((docRef) => {
@@ -84,6 +85,20 @@ export const newPost = async (postDetails) => {
     }).then(() => {
 
     });
+
+    postDetails.tagged.forEach((user) => {
+      const userTaggedRef = db.collection('users').doc(user.userId).collection('taggedPosts');
+      userTaggedRef.doc(docRef.id).set({
+        displayName: postDetails.displayName,
+        userId: postDetails.userId,
+        title: postDetails.title,
+        image: postDetails.image,
+        hashtags: postDetails.hashtags,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date())
+      }).then(() => {
+
+      });
+    })
 
     const heartRef = db.collection('hearts');
     heartRef.doc(docRef.id).set({
@@ -129,7 +144,7 @@ export const editPost = async (postDetails) => {
 
 }
 
-export const deletePost = async (postId, userId, postsCount) => {
+export const deletePost = async (postId, userId, postsCount, tagged) => {
   const db = firebase.firestore();
 
   const userRef = db.collection('users').doc(userId);
@@ -146,9 +161,14 @@ export const deletePost = async (postId, userId, postsCount) => {
 
     userRef.collection('posts').doc(postId).delete().then(() => {
       console.log('Successfully removed post from user collection.');
-
     }).catch((error) => {
       return error.message;
+    })
+
+    tagged.forEach((user) => {
+      db.collection('users').doc(user.userId).collection('taggedPosts').doc(postId).delete().then(() => {
+        console.log('Successfully removed post from tagged user collection.');
+      });
     })
 
   }).catch((error) => {
@@ -439,6 +459,25 @@ export const getUsersFollowing = async (userSignedInId) => {
     }
     const userIds = doc.data().users.map((user) => {
       followingUsers.push(user);
+    });
+    console.log(followingUsers);
+    return followingUsers;
+  });
+}
+
+export const getUsersFollowingSelect = async (userSignedInId) => {
+  const db = firebase.firestore();
+  const userRef = db.collection('following').doc(userSignedInId);
+  let followingUsers = [];
+
+  return await userRef.get().then((doc) => {
+    if (!doc.data()) {
+      followingUsers = [];
+      return;
+    }
+    const userIds = doc.data().users.map((user) => {
+      let newSelect = {value: user.userId, label: user.displayName}
+      followingUsers.push(newSelect);
     });
     console.log(followingUsers);
     return followingUsers;

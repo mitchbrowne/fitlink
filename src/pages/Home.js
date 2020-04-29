@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SearchBarTagged from '../components/SearchBarTagged';
 
 import {
   Container,
@@ -12,6 +13,7 @@ export default class Home extends Component {
       <div>
         <Container className="justify-content-md-center">
           <h1>Home Page</h1>
+          <SearchBarTagged />
         </Container>
       </div>
     )

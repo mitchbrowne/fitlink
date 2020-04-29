@@ -28,6 +28,16 @@ export default (props) => {
 
     e.preventDefault();
 
+    let newTagged = [];
+    const convertTaggedObjects = () => {
+      tagged.map((taggedObject) => {
+        const newObject = {userId: taggedObject.value, displayName: taggedObject.label};
+        newTagged.push(newObject);
+      });
+    }
+
+    convertTaggedObjects();
+
     const postDetails = {
       userId: props.user.userId,
       postsCount: props.user.postsCount,
@@ -37,7 +47,8 @@ export default (props) => {
       desc: desc,
       image: image,
       link: link,
-      hashtags: hashtags
+      hashtags: hashtags,
+      tagged: newTagged
     }
     console.log('Post Details: ', postDetails);
     const docRef = await newPost(postDetails).then((data) => {
