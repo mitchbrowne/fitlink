@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 import firebase from 'firebase';
 import { getUser } from './helpers/fireUtils';
 
-import Permission from './components/Permission';
+import SignedInPermission from './components/SignedInPermission';
 import Layout from './components/Layout';
 
 import Home from './pages/Home';
@@ -87,7 +87,7 @@ export default class App extends Component {
                 <Home {...props} user={this.state.user} />
               )}
             />
-            <Permission {...this.props} user={this.state.user}>
+            <SignedInPermission {...this.props} user={this.state.user}>
               <Route
                 exact
                 path="/feed"
@@ -141,18 +141,20 @@ export default class App extends Component {
                   <EditWorkout {...props} user={this.state.user}/>
                 )}
               />
-            </Permission>
-            <Route
-              exact
-              path="/signup"
-              render={(props) => (
-                <Signup {...props}/>
-              )}
-            />
-            <Route
-              exact
-              path="/signin"
-              component={Signin}/>
+            </SignedInPermission>
+
+              <Route
+                exact
+                path="/signup"
+                render={(props) => (
+                  <Signup {...props}/>
+                )}
+              />
+              <Route
+                exact
+                path="/signin"
+                component={Signin}/>
+
           </Layout>
         </div>
       </Router>

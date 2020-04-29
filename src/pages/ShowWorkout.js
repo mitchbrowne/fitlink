@@ -17,6 +17,7 @@ export default class ShowWorkout extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      owner: false,
       heartStatus: null,
       heartsCount: null,
       postId: props.match.params.postId,
@@ -32,6 +33,10 @@ export default class ShowWorkout extends Component {
     this.setState({post: post.data()});
     console.log(post.data());
     this.setState({heartsCount: post.data().heartsCount});
+
+    if (post.data().userId === this.props.user.userId) {
+      this.setState({owner: true});
+    }
   }
 
   async componentDidUpdate() {
@@ -142,10 +147,12 @@ export default class ShowWorkout extends Component {
                     }</Card.Link>
                     <Card.Link href={`${this.state.post.link}`} target="_blank">Link</Card.Link>
                   </Col>
-                  <Col>
-                    <Card.Link as={Link} to={`/workouts/edit/${this.state.postId}`}>Edit</Card.Link>
-                    <Card.Link as={Link} to={'#'} onClick={this._handleDeletePost}>Delete</Card.Link>
-                  </Col>
+                  {this.state.owner &&
+                    <Col>
+                      <Card.Link as={Link} to={`/workouts/edit/${this.state.postId}`}>Edit</Card.Link>
+                      <Card.Link as={Link} to={'#'} onClick={this._handleDeletePost}>Delete</Card.Link>
+                    </Col>
+                  }
                 </Row>
               </Card.Body>
             </Card>

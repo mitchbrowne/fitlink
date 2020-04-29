@@ -19,6 +19,7 @@ export default class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      owner: false,
       searchLoading: false,
       userId: props.match.params.userId,
       userProfile: null,
@@ -37,6 +38,9 @@ export default class Profile extends Component {
   }
 
   async componentDidMount() {
+    if (this.props.match.params.userId === this.props.user.userId) {
+      this.setState({owner: true});
+    }
     const userProfile = await getUser(this.props.match.params.userId).then((userProfile) => {
       console.log('Successfully fetched user data.');
       this.setState({userProfile: userProfile.data()});
@@ -54,8 +58,14 @@ export default class Profile extends Component {
   }
 
   async componentDidUpdate(prevProps) {
+
     if (this.props.match.params.userId !== prevProps.match.params.userId) {
       this.setState({searchLoading: true});
+      this.setState({owner: false});
+      if (this.props.match.params.userId === this.props.user.userId) {
+        this.setState({owner: true});
+      }
+
       const userProfile = await getUser(this.props.match.params.userId).then((userProfile) => {
         console.log('Successfully fetched user data.');
         this.setState({userProfile: userProfile.data()});
@@ -146,6 +156,7 @@ export default class Profile extends Component {
       <div>
         <Container className="justify-content-md-center">
           <UserProfileHeader
+            owner={this.state.owner}
             userProfile={this.state.userProfile}
             following={this.state.following}
             followersCount={this.state.followersCount}
@@ -257,12 +268,14 @@ const UserProfileHeader = (props) => {
             </Col>
           </Row>
           <Row>
-            <Button size="sm" onClick={_handleFollowClick}>
-              {props.following
-                ? ('Following')
-                : ('Follow')
-              }
-            </Button>
+            {!props.owner &&
+              <Button size="sm" onClick={_handleFollowClick}>
+                {props.following
+                  ? ('Following')
+                  : ('Follow')
+                }
+              </Button>
+            }
           </Row>
         </Col>
       </Row>
