@@ -128,6 +128,8 @@ export default class Profile extends Component {
             searchLoading={this.state.searchLoading}
             view={this.state.view}
             posts={this.state.posts}
+            followingData={this.state.followingData}
+            followersData={this.state.followersData}
           />
         </Container>
       </div>
@@ -145,19 +147,27 @@ const ProfileContent = (props) => {
 
   if (props.view === 'posts') {
     return (
-      <UserProfilePosts posts={props.posts}/>
+      <UserProfilePosts posts={props.posts} />
     )
   }
 
   if (props.view === 'following') {
+    console.log(props.followingData);
     return (
-      <h3>Following</h3>
+      <div>
+        <h3>Following</h3>
+        <UserProfileFollow followData={props.followingData} />
+      </div>
     )
   }
 
   if (props.view === 'followers') {
+    console.log(props.followersData);
     return (
-      <h3>Followers</h3>
+      <div>
+        <h3>Followers</h3>
+        <UserProfileFollow followData={props.followersData} />
+      </div>
     )
   }
 
@@ -283,6 +293,31 @@ const UserProfilePosts = (props) => {
   )
 }
 
-const UserProfileFollowers = (props) => {
+const UserProfileFollow = (props) => {
+  const follow = props.followData.map((followUser) => {
+    const u = followUser;
 
+    return (
+      <Row key={u.userId} md="12" className="d-flex justify-content-center mt-4">
+        <Col xs lg="8">
+          <Image src={u.photoURL} roundedCircle alt="user profile image" className="profile-image"/>
+        </Col>
+        <Col xs ls="4" className="justify-content-md-center">
+          <Link to={`/profile/${u.userId}`} >
+            <h3>{u.displayName}</h3>
+          </Link>
+        </Col>
+      </Row>
+    )
+  })
+
+  return (
+    <div>
+      <Container>
+        <Row>
+          {follow}
+        </Row>
+      </Container>
+    </div>
+  )
 }
