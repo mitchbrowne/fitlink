@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
-import { getUser, getUserPosts, isFollowing, addFollowing, removeFollowing } from '../helpers/fireUtils';
+import { getUser, getUserPosts, isFollowing, addFollowing, removeFollowing, getUserTaggedPosts, getUserFollowers, getUserFollowing } from '../helpers/fireUtils';
 import Timestamp from 'react-timestamp';
+// import ProfileContent from '../components/ProfileContent';
 
 import {
   Container,
@@ -18,13 +19,21 @@ export default class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchLoading: false,
       userId: props.match.params.userId,
       userProfile: null,
       posts: null,
+      followingData: null,
+      followersData: null,
+      taggedData: null,
       following: false,
-      followersCount: 0
+      followersCount: 0,
+      view: 'posts',
     }
     this._handleFollowChange = this._handleFollowChange.bind(this);
+    this._handleViewClick = this._handleViewClick.bind(this);
+    this._handleFollowersQuery = this._handleFollowersQuery.bind(this);
+    this._handleTaggedQuery = this._handleTaggedQuery.bind(this);
   }
 
   async componentDidMount() {
@@ -58,6 +67,46 @@ export default class Profile extends Component {
     this.setState({following: !this.state.following});
   }
 
+  _handleFollowersQuery() {
+    getUserFollowers(this.state.userId).then((followersData) => {
+      console.log(followersData);
+      this.setState({followersData: followersData});
+      this.setState({searchLoading: false});
+    })
+  }
+
+  _handleFollowingQuery() {
+    getUserFollowing(this.state.userId).then((followingData) => {
+      console.log(followingData);
+      this.setState({followingData: followingData});
+      this.setState({searchLoading: false});
+    })
+  }
+
+  _handleTaggedQuery() {
+    getUserTaggedPosts(this.state.userId).then((taggedData) => {
+      console.log(taggedData);
+      this.setState({taggedData: taggedData});
+      this.setState({searchLoading: false});
+    });
+  }
+
+  _handleViewClick(view) {
+    if (view === 'tagged' && this.state.taggedData === null) {
+      this._handleTaggedQuery();
+      this.setState({searchLoading: true});
+    }
+    if (view === 'followers' && this.state.followersData === null) {
+      this._handleFollowersQuery();
+      this.setState({searchLoading: true});
+    }
+    if (view === 'following' && this.state.followingData === null) {
+      this._handleFollowingQuery();
+      this.setState({searchLoading: true});
+    }
+    this.setState({view: view});
+  }
+
   render() {
     if (this.state.userProfile === null || this.state.posts === null) return (
       <Spinner animation="border" role="status">
@@ -68,8 +117,18 @@ export default class Profile extends Component {
     return (
       <div>
         <Container className="justify-content-md-center">
-          <UserProfileHeader userProfile={this.state.userProfile} following={this.state.following} followersCount={this.state.followersCount} handleFollowChange={this._handleFollowChange}/>
-          <UserProfilePosts posts={this.state.posts}/>
+          <UserProfileHeader
+            userProfile={this.state.userProfile}
+            following={this.state.following}
+            followersCount={this.state.followersCount}
+            handleFollowChange={this._handleFollowChange}
+            handleViewClick={this._handleViewClick}
+          />
+          <ProfileContent
+            searchLoading={this.state.searchLoading}
+            view={this.state.view}
+            posts={this.state.posts}
+          />
         </Container>
       </div>
 
@@ -77,10 +136,50 @@ export default class Profile extends Component {
   }
 }
 
+const ProfileContent = (props) => {
+  if (props.searchLoading) return (
+    <Spinner animation="border" role="status">
+      <span className="sr-only">Loading...</span>
+    </Spinner>
+  )
+
+  if (props.view === 'posts') {
+    return (
+      <UserProfilePosts posts={props.posts}/>
+    )
+  }
+
+  if (props.view === 'following') {
+    return (
+      <h3>Following</h3>
+    )
+  }
+
+  if (props.view === 'followers') {
+    return (
+      <h3>Followers</h3>
+    )
+  }
+
+  if (props.view === 'tagged') {
+    return (
+      <h3>Tagged</h3>
+    )
+  }
+
+  return (
+    <h2>Show no content...</h2>
+  )
+}
+
 const UserProfileHeader = (props) => {
   const _handleFollowClick = () => {
-    console.log('Follow clicked');
     props.handleFollowChange();
+  }
+
+  const _handleViewClick = (e) => {
+    e.preventDefault();
+    props.handleViewClick(e.target.name);
   }
 
   return (
@@ -89,18 +188,29 @@ const UserProfileHeader = (props) => {
         <Col xs lg="2">
           <Image src={props.userProfile.photoURL} roundedCircle alt="user profile image" className="profile-image"/>
         </Col>
-        <Col xs lg="4" className="justify-content-md-center">
+        <Col xs lg="6" className="justify-content-md-center">
           <h1>{props.userProfile.displayName}</h1>
           <h4>{props.userProfile.bio}</h4>
           <Row>
             <Col>
-              <p>{props.followersCount} Followers</p>
+              <Link to={'#'} name={'followers'} onClick={_handleViewClick}>
+                {props.followersCount} Followers
+              </Link>
             </Col>
             <Col>
-              <p>{props.userProfile.followingCount} Following</p>
+              <Link to={'#'} name={'following'} onClick={_handleViewClick}>
+                {props.userProfile.followingCount} Following
+              </Link>
             </Col>
             <Col>
-              <p>{props.userProfile.postsCount} Posts</p>
+              <Link to={'#'} name={'posts'} onClick={_handleViewClick}>
+                {props.userProfile.postsCount} Posts
+              </Link>
+            </Col>
+            <Col>
+              <Link to={'#'} name={'tagged'} onClick={_handleViewClick}>
+                {props.userProfile.taggedCount} Tagged
+              </Link>
             </Col>
           </Row>
           <Row>
@@ -171,4 +281,8 @@ const UserProfilePosts = (props) => {
       </Container>
     </div>
   )
+}
+
+const UserProfileFollowers = (props) => {
+
 }

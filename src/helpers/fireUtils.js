@@ -87,8 +87,13 @@ export const newPost = async (postDetails) => {
     });
 
     postDetails.tagged.forEach((user) => {
-      const userTaggedRef = db.collection('users').doc(user.userId).collection('taggedPosts');
-      userTaggedRef.doc(docRef.id).set({
+      const userTaggedRef = db.collection('users').doc(user.userId);
+
+      userTaggedRef.update({
+        taggedCount: firebase.firestore.FieldValue.increment(1)
+      });
+
+      userTaggedRef.collection('taggedPosts').doc(docRef.id).set({
         displayName: postDetails.displayName,
         userId: postDetails.userId,
         title: postDetails.title,
@@ -166,7 +171,12 @@ export const deletePost = async (postId, userId, postsCount, tagged) => {
     })
 
     tagged.forEach((user) => {
-      db.collection('users').doc(user.userId).collection('taggedPosts').doc(postId).delete().then(() => {
+      const userTaggedRef = db.collection('users').doc(user.userId);
+      userTaggedRef.update({
+        taggedCount: firebase.firestore.FieldValue.increment(-1)
+      });
+
+      userTaggedRef.collection('taggedPosts').doc(postId).delete().then(() => {
         console.log('Successfully removed post from tagged user collection.');
       });
     })
@@ -303,6 +313,10 @@ export const signUp = async (email, password, displayName) => {
             email: user.user.email,
             displayName: user.user.displayName,
             bio: '',
+            followersCount: 0,
+            followingCount: 0,
+            postsCount: 0,
+            taggedCount: 0,
             photoURL: `https://api.adorable.io/avatars/290/${user.user.email}.png`
           })
 
@@ -481,5 +495,40 @@ export const getUsersFollowingSelect = async (userSignedInId) => {
     });
     console.log(followingUsers);
     return followingUsers;
+  });
+}
+
+export const getUserTaggedPosts = async (userProfileId) => {
+  const db = firebase.firestore();
+  const taggedPostsRef = db.collection('users').doc(userProfileId).collection('taggedPosts').orderBy('createdAt', 'desc');
+
+  return await taggedPostsRef.get().then(posts => {
+    let taggedPosts = [];
+    posts.forEach(doc => {
+      console.log(doc.id);
+      taggedPosts.push(doc);
+    });
+    console.log(taggedPosts);
+    return taggedPosts;
+  });
+}
+
+export const getUserFollowers = async (userProfileId) => {
+  const db = firebase.firestore();
+  const userFollowersRef = db.collection('followers').doc(userProfileId);
+
+  return await userFollowersRef.get().then(followers => {
+    console.log(followers.data().users);
+    return followers.data().users;
+  });
+}
+
+export const getUserFollowing = async (userProfileId) => {
+  const db = firebase.firestore();
+  const userFollowingRef = db.collection('following').doc(userProfileId);
+
+  return await userFollowingRef.get().then(following => {
+    console.log(following.data().users);
+    return following.data().users;
   });
 }
