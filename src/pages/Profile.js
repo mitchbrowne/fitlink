@@ -37,7 +37,7 @@ export default class Profile extends Component {
   }
 
   async componentDidMount() {
-    const userProfile = await getUser(this.state.userId).then((userProfile) => {
+    const userProfile = await getUser(this.props.match.params.userId).then((userProfile) => {
       console.log('Successfully fetched user data.');
       this.setState({userProfile: userProfile.data()});
       this.setState({followersCount: userProfile.data().followersCount});
@@ -51,6 +51,30 @@ export default class Profile extends Component {
 
     const isFollowingBool = await isFollowing(this.state.userId, this.props.user.userId);
     this.setState({following: isFollowingBool});
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (this.props.match.params.userId !== prevProps.match.params.userId) {
+      this.setState({searchLoading: true});
+      const userProfile = await getUser(this.props.match.params.userId).then((userProfile) => {
+        console.log('Successfully fetched user data.');
+        this.setState({userProfile: userProfile.data()});
+        this.setState({followersCount: userProfile.data().followersCount});
+        this.setState({userId: this.props.match.params.userId});
+      }).catch((error) => {
+        console.log('Unsuccessfully fetched user data.');
+      });
+
+      console.log('Mounted.');
+      const posts = await getUserPosts(this.state.userId);
+      this.setState({posts: posts})
+
+      const isFollowingBool = await isFollowing(this.state.userId, this.props.user.userId);
+      this.setState({following: isFollowingBool});
+
+      this.setState({view: 'posts'});
+      this.setState({searchLoading: false});
+    }
   }
 
   _handleFollowChange() {

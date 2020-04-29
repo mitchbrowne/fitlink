@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, withRouter} from 'react-router-dom';
 import firebase from 'firebase';
 import { getUser } from './helpers/fireUtils';
 
@@ -117,7 +117,7 @@ export default class App extends Component {
               )}
                />
             <Route
-              exact
+
               path="/profile/:userId"
               render={(props) => (
                 <Profile {...props} user={this.state.user} />
