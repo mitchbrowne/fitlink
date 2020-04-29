@@ -98,6 +98,7 @@ export const newPost = async (postDetails) => {
         userId: postDetails.userId,
         title: postDetails.title,
         image: postDetails.image,
+        tagged: postDetails.tagged,
         hashtags: postDetails.hashtags,
         createdAt: firebase.firestore.Timestamp.fromDate(new Date())
       }).then(() => {

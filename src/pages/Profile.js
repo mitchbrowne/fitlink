@@ -130,6 +130,7 @@ export default class Profile extends Component {
             posts={this.state.posts}
             followingData={this.state.followingData}
             followersData={this.state.followersData}
+            taggedData={this.state.taggedData}
           />
         </Container>
       </div>
@@ -172,6 +173,7 @@ const ProfileContent = (props) => {
   }
 
   if (props.view === 'tagged') {
+    console.log(props.taggedData);
     return (
       <h3>Tagged</h3>
     )
