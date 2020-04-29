@@ -21,15 +21,18 @@ export const requestUserFeedPosts = async (userSignedInId) => {
 export const getUserFeedPosts = async (userSignedInId) => {
   const db = firebase.firestore();
   const userRef = db.collection('following').doc(userSignedInId);
-
-  let followingUsers;
+  let followingUsers = [];
 
   await userRef.get().then((doc) => {
     if (!doc.data()) {
       followingUsers = [];
       return;
     }
-    followingUsers = Object.keys(doc.data());
+    const userIds = doc.data().users.map((user) => {
+      followingUsers.push(user.userId);
+      return user.userId;
+    })
+    // followingUsers = Object.keys(doc.data().users);
   });
 
   followingUsers.push(userSignedInId);
