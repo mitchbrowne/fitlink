@@ -38,20 +38,24 @@ export default class App extends Component {
         this.setState({user: null});
         console.log('No user signed in on state change');
         return null;
-      }
-      const userDetails = await getUser(userProfile.uid);
-      console.log(userDetails.data());
+      } else {
+        const userDetails = await getUser(userProfile.uid).then((userDetails) => {
+          console.log(userDetails.data());
 
-      const user = {
-        userId: userProfile.uid,
-        postsCount: userDetails.data().postsCount,
-        email: userDetails.data().email,
-        displayName: userDetails.data().displayName,
-        bio: userDetails.data().bio,
-        photoURL: userDetails.data().photoURL
+          const user = {
+            userId: userProfile.uid,
+            postsCount: userDetails.data().postsCount,
+            email: userDetails.data().email,
+            displayName: userDetails.data().displayName,
+            bio: userDetails.data().bio,
+            photoURL: userDetails.data().photoURL
+          }
+          console.log(user);
+          this.setState({user: user});
+        });
       }
-      console.log(user);
-      this.setState({user: user});
+
+
     })
   }
 

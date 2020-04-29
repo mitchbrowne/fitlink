@@ -11,8 +11,8 @@ import {
 } from 'react-bootstrap'
 
 export default (props) => {
-  const [displayName, setDisplayName] = useState('Mitch');
-  const [email, setEmail] = useState('mfbrowne18@gmail.com');
+  const [displayName, setDisplayName] = useState('Bridget');
+  const [email, setEmail] = useState('bridget@gmail.com');
   const [password, setPassword] = useState('chicken');
   const [confirmPassword, setConfirmPassword] = useState('chicken');
   const [error, setError] = useState('');

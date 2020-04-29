@@ -40,6 +40,11 @@ export default class UserFeed extends Component {
         let newPostsHeartCount = {};
         let newPostsHeartStatus = {};
 
+        if (postsData.flat().length === 0) {
+          this.setState({postsHeartCount: newPostsHeartCount});
+          this.setState({postsHeartStatus: newPostsHeartStatus});
+        }
+
         const allPosts = postsData.flat().map((post) => {
           const postHeartCount = {
             [post.id]: post.data().heartsCount
@@ -73,6 +78,11 @@ export default class UserFeed extends Component {
 
         let newPostsHeartCount = {};
         let newPostsHeartStatus = {};
+
+        if (postsData.flat().length === 0) {
+          this.setState({postsHeartCount: newPostsHeartCount});
+          this.setState({postsHeartStatus: newPostsHeartStatus});
+        }
 
         const allPosts = postsData.flat().map((post) => {
           const postHeartCount = {
@@ -122,10 +132,15 @@ export default class UserFeed extends Component {
   }
 
   render() {
+
     if (this.state.user === null || this.state.posts === null || this.state.postsHeartStatus === null) return (
       <Spinner animation="border" role="status">
         <span className="sr-only">Loading...</span>
       </Spinner>
+    )
+
+    if (this.state.user === null || this.state.posts.length === 0) return (
+      <h1>You have no posts... Maybe follow some friends?</h1>
     )
 
     return (

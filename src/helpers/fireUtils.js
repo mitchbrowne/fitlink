@@ -299,27 +299,37 @@ export const signIn = async (email, password) => {
 }
 
 export const signUp = async (email, password, displayName) => {
-  await firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
+  await firebase.auth().createUserWithEmailAndPassword(email, password).then(async function(user) {
 
-        firebase.auth().currentUser.updateProfile({
+      const db = firebase.firestore();
+      const usersRef = db.collection('users');
+
+      await usersRef.doc(user.user.uid).set({
+        email: user.user.email,
+        displayName: displayName,
+        bio: '',
+        followersCount: 0,
+        followingCount: 0,
+        postsCount: 0,
+        taggedCount: 0,
+        photoURL: `https://api.adorable.io/avatars/290/${user.user.email}.png`
+      })
+
+        await firebase.auth().currentUser.updateProfile({
           displayName: displayName,
           photoURL: `https://api.adorable.io/avatars/290/${email}.png`
-        }).then(() => {
+        }).then(async () => {
 
-          console.log("user: ", user);
-          const db = firebase.firestore();
-          const usersRef = db.collection('users');
-
-          usersRef.doc(user.user.uid).set({
-            email: user.user.email,
-            displayName: user.user.displayName,
-            bio: '',
-            followersCount: 0,
-            followingCount: 0,
-            postsCount: 0,
-            taggedCount: 0,
-            photoURL: `https://api.adorable.io/avatars/290/${user.user.email}.png`
-          })
+          // await db.collection('following').doc(user.user.id).add({
+          //   users: []
+          // }).then(() => {
+          //   console.log('Successfull following on sign up');
+          // });
+          // await db.collection('followers').doc(user.user.id).add({
+          //   users: []
+          // }).then(() => {
+          //   console.log('Successfull followers on sign up');
+          // })
 
         }).catch((error) => {
           console.log('User not added.');
@@ -390,7 +400,7 @@ export const isFollowing = async (userId, userSignedInId) => {
   const db = firebase.firestore();
   const followingRef = db.collection('following').doc(userSignedInId);
   return followingRef.get().then((doc) => {
-    if (!doc.data().users) {
+    if (!doc.data()) {
       return false;
     }
     let result = doc.data().users.find(user => user.userId === userId);
@@ -519,6 +529,9 @@ export const getUserFollowers = async (userProfileId) => {
   const userFollowersRef = db.collection('followers').doc(userProfileId);
 
   return await userFollowersRef.get().then(followers => {
+    if (!followers.data()) {
+      return [];
+    }
     console.log(followers.data().users);
     return followers.data().users;
   });
@@ -529,6 +542,9 @@ export const getUserFollowing = async (userProfileId) => {
   const userFollowingRef = db.collection('following').doc(userProfileId);
 
   return await userFollowingRef.get().then(following => {
+    if (!following.data()) {
+      return [];
+    }
     console.log(following.data().users);
     return following.data().users;
   });
