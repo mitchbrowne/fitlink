@@ -142,7 +142,11 @@ export default class UserFeed extends Component {
     )
 
     if (this.state.user === null || this.state.posts.length === 0) return (
-      <h4>You have no posts... Maybe follow some friends?</h4>
+      <Container className="justify-content-md-center">
+        <Row className="margin-top-profile justify-content-md-center">
+        <h4>You have no posts... Maybe follow some <Link className="main-custom-link" as={Link} to={`/explore`}>friends?</Link></h4>
+        </Row>
+      </Container>
     )
 
     return (

@@ -19,7 +19,7 @@ export default (props) => {
     e.preventDefault();
 
     await signIn(email, password).then(() => {
-      props.history.push('/feed')
+      props.history.push('/home')
     }).catch((error) => {
       setError(error.message);
     });
