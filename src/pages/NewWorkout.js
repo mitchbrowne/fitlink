@@ -78,7 +78,7 @@ export default (props) => {
 
   return (
     <div>
-      <Container>
+      <Container className="mt-4">
         <Row className="justify-content-md-center">
           <Col md="4">
             <h1>Post Workout</h1>
@@ -92,7 +92,7 @@ export default (props) => {
         <Row className="justify-content-md-center">
           <Col md="6">
               <Form.Group controlId="title">
-                <Form.Label>Workout Name</Form.Label>
+                <Form.Label>What's the workout?</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -109,7 +109,7 @@ export default (props) => {
                  />
               </Form.Group>
               <Form.Group controlId="image">
-                <Form.Label>Add Photo</Form.Label>
+                <Form.Label>Add a photo of your workout!</Form.Label>
                 <UploadImage handleImage={_handleImage}/>
               </Form.Group>
               <Form.Group controlId="link">
@@ -122,16 +122,15 @@ export default (props) => {
                  />
               </Form.Group>
               <Form.Group controlId="tagged">
-                <Form.Label>Tag Friends</Form.Label>
+                <Form.Label>Tag Friends <small>(Must be following to tag friend)</small></Form.Label>
                 <InputTagged handleTagged={_handleTagged} tagged={tagged} user={props.user}/>
               </Form.Group>
               <Form.Group controlId="tags">
-                <Form.Label>Hashtags</Form.Label>
-                <small>Type tag and hit enter</small>
+                <Form.Label>Hashtags <small>(Type tag and hit enter)</small></Form.Label>
                 <InputTag handleHashtags={_handleHashtags} hashtags={hashtags}/>
               </Form.Group>
               <div className="text-center">
-                <Button variant="primary" type="submit" onClick={_handleSubmit}>
+                <Button variant="primary" type="submit" className="mt-4" onClick={_handleSubmit}>
                   Post Workout
                 </Button>
               </div>

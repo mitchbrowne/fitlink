@@ -74,9 +74,9 @@ export default (props) => {
 
   return (
     <div>
-      <Container>
-        <Row className="justify-content-md-center">
-          <Col md="2">
+      <Container className="mt-4">
+        <Row className="mt-4 justify-content-md-center">
+          <Col md="4">
             <h1>Edit Workout</h1>
           </Col>
         </Row>
@@ -119,7 +119,7 @@ export default (props) => {
                 <InputTag hashtags={hashtags} handleHashtags={_handleHashtags}/>
               </Form.Group>
               <div className="text-center">
-                <Button variant="primary" type="submit" onClick={_handleSubmit}>
+                <Button variant="primary" type="submit" className="mt-4" onClick={_handleSubmit}>
                   Save Changes
                 </Button>
               </div>

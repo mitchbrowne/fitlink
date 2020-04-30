@@ -27,7 +27,7 @@ export default (props) => {
 
   return (
     <div>
-      <Container>
+      <Container className="margin-top-profile">
         <Row className="justify-content-md-center">
           <Col md="2">
             <h1>Sign In</h1>
@@ -58,12 +58,12 @@ export default (props) => {
                  />
               </Form.Group>
               <div className="text-center">
-                <Button variant="primary" type="submit">
+                <Button variant="primary" className="mt-4" type="submit">
                   Sign In
                 </Button>
               </div>
             </Form>
-            <div className="text-center">
+            <div className="margin-top-profile text-center">
               <Link to="/signup">
                 Not already signed up?
               </Link>

@@ -38,7 +38,7 @@ export default (props) => {
   return (
     <div>
       <Navbar bg="light" expand="lg">
-        <Navbar.Brand as={Link} to="/">fitlink</Navbar.Brand>
+        <Navbar.Brand className="navbar-logo" as={Link} to="/">FitLink</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
             {user &&

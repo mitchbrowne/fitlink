@@ -65,7 +65,7 @@ export default (props) => {
 
   return (
     <div>
-      <Container>
+      <Container className="margin-top-profile">
         <Row className="justify-content-md-center">
           <Col md="2">
             <h1>Settings</h1>
@@ -105,20 +105,19 @@ export default (props) => {
               </Form.Group>
               <Form.Group controlId="photoURL">
                 <Form.Label>Profile Picture</Form.Label>
-                <Image src={photoURL} alt="profile picture" className="profile-settings-photo block" roundedCircle/>
+                <Image src={photoURL} alt="profile picture" className="ml-4 mb-4 profile-settings-photo block" roundedCircle/>
                  <UploadImage handleImage={_handleImage}/>
               </Form.Group>
               <div className="text-center">
                 {loading
-                  ? <Button variant="primary" type="submit" disabled>
+                  ? <Button variant="primary" type="submit" className="mt-4" disabled>
                     Save Changes
                   </Button>
-                  : <Button variant="primary" type="submit">
+                  : <Button variant="primary" type="submit" className="mt-4">
                     Save Changes
                   </Button>
                 }
               </div>
-
             </Form>
           </Col>
         </Row>
