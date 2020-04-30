@@ -20,10 +20,13 @@ export default (props) => {
   const [hashtags, setHashtags] = useState([]);
   const [tagged, setTagged] = useState([]);
   const [link, setLink] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const _handleSubmit = async (e) => {
+    setLoading(true);
     if (title === '' || desc === '' || image === '' || link === '') {
       setError('Please fill out all fields');
+      setLoading(false);
       return;
     }
     setError('Uploading your workout, one sec...');
@@ -56,6 +59,7 @@ export default (props) => {
       const docRef = await newPost(postDetails).then((data) => {
         props.fetchUpdatedUser(props.user.userId);
         props.history.push(`/workouts/show/${data.id}`);
+        setLoading(false);
       });
     })
 
@@ -64,12 +68,10 @@ export default (props) => {
 
   const _handleTagged = (taggedData) => {
     setTagged(taggedData);
-    console.log(taggedData);
   }
 
   const _handleHashtags = (hashtagsData) => {
     setHashtags(hashtagsData);
-    console.log(hashtagsData);
   }
 
   const _handleImage = async (imageFile) => {
@@ -130,9 +132,14 @@ export default (props) => {
                 <InputTag handleHashtags={_handleHashtags} hashtags={hashtags}/>
               </Form.Group>
               <div className="text-center">
-                <Button variant="primary" type="submit" className="mt-4" onClick={_handleSubmit}>
-                  Post Workout
-                </Button>
+                {loading
+                  ? <Button variant="primary" type="submit" className="mt-4" disabled>
+                    Post Workout
+                  </Button>
+                  : <Button variant="primary" type="submit" className="mt-4" onClick={_handleSubmit}>
+                    Post Workout
+                  </Button>
+                }
               </div>
           </Col>
         </Row>
