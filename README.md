@@ -1,68 +1,56 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# FitLink
 
-## Available Scripts
+# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Final Project: FitLink
 
-In the project directory, you can run:
+### Overview
 
-### `npm start`
+Social web platform, like Instagram, where you can post online workouts you’ve done! Users can follow their friends and see what workouts they're doing! Fills the gap where a lot of people currently want to do home workouts, however need to search and find good workout videos. This makes that task easy and enjoyable. Users add hashtags to their posts to give others an idea of what the workout is about, as well as @tag other friends who did it with them. All these posts get put onto a users feed. A user can also perform a search via hashtags to explore other workout videos. Give your friends hearts and do workouts together!
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Link To FitLink
+https://fitlink-1.web.app/
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Explore
+Scroll a feed of workouts your friends have posted, including picture, hashtags and link
 
-### `npm test`
+### Search
+Search for workouts your friends have done using hashtags
+Easily click the link on the post to be taken straight to the online workout video
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Share
+Follow your friends and favourite trainers
+Let your friends see what online exercise/workout classes/videos you’ve done and if you recommend them
+Do workouts with your friends and tag them in your posts
+Heart your friends workouts
 
-### `npm run build`
+### Objective
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The objective of this project is to:
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+- No brief! Just build a web application from the ground up using both what we've learnt over the past 12 weeks and any additional material.
+- To demonstrate mastery of topics covered during this course (Javascript, React, Databases (NoSQL), Client and Server Side Frameworks, Deployment, Design, Html, CSS, and much much more...).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### What I've Learned
 
-### `npm run eject`
+- **Single Page Applications**: Routing and moving data on one single web app
+- **Cloud Database Querying**: Reading and writing to Google Firebase's Cloud Firestore (NoSQL)
+- **Error Handling**: Ensuring users are led through the application seamlessly
+- **User Authentication/Permissions**: Sign Up, Sign In, Sign Out
+- **Responsiveness**: Application can go for big screen, to small screen with no noticeable jumps!
+- **Content Delivery Network**: Image upload functionality utilising CDN's
+- **User Experience**: Collaboration with UX designers to build high-fidelity prototypes and user flows
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Proud as Punch
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Complete Site**: The application is completely running. It is how I'd expect the MVP to look, feel and work like.
+- **Actual Users**: Friends have signed up and used the platform. Posting workouts, following friends, hearting posts and tagging others.
+- **NoSQL**: First time building an app with a NoSQL database. Steep learning curve and multiple iterations of the data structure, but positive outcome!
+- **Following/Followers**: A responsive following/followers system allows user to see friend's content and see who is following them and who they are following.
+- **Bootstrap**: Bootstrap is a time saver, as much as I like to style myself, Bootstrap is quick and looks great. The responsiveness is especially impressive.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Just Missed The Cut
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- **Image Optimisation**: Using image optimisation libraries to compress user images prior to upload, hence reducing page loading time and minimising storage space
+- **Test Driven Development**: Engineer it so it can't break. Utilise tests throughout the process for faster and sturdier development
+- **Email Authentication**: Automatic email to user to verify email address
+- **Push Notifications**: When someone follows, hearts or tags you in a post
+- **Refactoring**: Written clean code with indentation, however refactoring would do a tremendous job at improving the sites performance
