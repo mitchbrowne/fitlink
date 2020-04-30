@@ -100,7 +100,7 @@ export default class ShowWorkout extends Component {
         <Container>
           <Row className="d-flex justify-content-center mt-4">
               <Card className="w-75 mb-4">
-                <Card.Img variant="top" src={this.state.post.image} alt={`${this.state.post.title} workout image`} className='workout-post-image' />
+                <Card.Img variant="top" src={this.state.post.image} alt={`${this.state.post.title} workout image`} />
                 <Card.Body>
                   <Row className="mb-2">
                     <Col xs lg="10">
