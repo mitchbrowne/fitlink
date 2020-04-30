@@ -86,6 +86,19 @@ export const newPost = async (postDetails) => {
 
     });
 
+    const taggedPostsRef = db.collection('taggedPosts').doc(docRef.id);
+    taggedPostsRef.set({
+      displayName: postDetails.displayName,
+      userId: postDetails.userId,
+      title: postDetails.title,
+      image: postDetails.image,
+      tagged: postDetails.tagged,
+      hashtags: postDetails.hashtags,
+      createdAt: firebase.firestore.Timestamp.fromDate(new Date())
+    }).then(() => {
+
+    });
+
     postDetails.tagged.forEach((user) => {
       const userTaggedRef = db.collection('users').doc(user.userId);
 
@@ -93,17 +106,17 @@ export const newPost = async (postDetails) => {
         taggedCount: firebase.firestore.FieldValue.increment(1)
       });
 
-      userTaggedRef.collection('taggedPosts').doc(docRef.id).set({
-        displayName: postDetails.displayName,
-        userId: postDetails.userId,
-        title: postDetails.title,
-        image: postDetails.image,
-        tagged: postDetails.tagged,
-        hashtags: postDetails.hashtags,
-        createdAt: firebase.firestore.Timestamp.fromDate(new Date())
-      }).then(() => {
-
-      });
+      // userTaggedRef.collection('taggedPosts').doc(docRef.id).set({
+      //   displayName: postDetails.displayName,
+      //   userId: postDetails.userId,
+      //   title: postDetails.title,
+      //   image: postDetails.image,
+      //   tagged: postDetails.tagged,
+      //   hashtags: postDetails.hashtags,
+      //   createdAt: firebase.firestore.Timestamp.fromDate(new Date())
+      // }).then(() => {
+      //
+      // });
     })
 
     const heartRef = db.collection('hearts');
@@ -144,6 +157,15 @@ export const editPost = async (postDetails) => {
       hashtags: postDetails.hashtags,
     }, {merge: true});
 
+    const taggedPostsRef = db.collection('taggedPosts').doc(postDetails.postId);
+    taggedPostsRef.set({
+      title: postDetails.title,
+      desc: postDetails.desc,
+      image: postDetails.image,
+      link: postDetails.link,
+      hashtags: postDetails.hashtags,
+    }, {merge: true});
+
   }).catch((error) => {
     console.log('Unsuccessful edit post');
   })
@@ -159,6 +181,8 @@ export const deletePost = async (postId, userId, postsCount, tagged) => {
   });
 
   const heartRef = db.collection('hearts').doc(postId).delete();
+
+  const taggedPostsRef = db.collection('taggedPosts').doc(postId).delete();
 
   const postRef = db.collection('posts').doc(postId);
   return await postRef.delete().then(() => {
@@ -177,9 +201,9 @@ export const deletePost = async (postId, userId, postsCount, tagged) => {
         taggedCount: firebase.firestore.FieldValue.increment(-1)
       });
 
-      userTaggedRef.collection('taggedPosts').doc(postId).delete().then(() => {
-        console.log('Successfully removed post from tagged user collection.');
-      });
+      // userTaggedRef.collection('taggedPosts').doc(postId).delete().then(() => {
+      //   console.log('Successfully removed post from tagged user collection.');
+      // });
     })
 
   }).catch((error) => {
