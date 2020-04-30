@@ -303,6 +303,20 @@ export const updateSettings = async (email, displayName, bio, photoURL) => {
     })
   })
 
+  const taggedRef = db.collection('posts').where('tagged', 'array-contains', {userId: user.uid, displayName: currentDisplayName});
+  await taggedRef.get().then((posts) => {
+    posts.forEach(doc => {
+      db.collection('posts').doc(doc.id).set({
+        tagged: [{
+          userId: user.uid,
+          displayName: displayName
+        }]
+      }, {merge: true}).then(() => {
+        console.log('Updated tagged');
+      })
+    })
+  })
+
   const heartsRef = db.collection('hearts').where('users', 'array-contains', {userId: user.uid, displayName: currentDisplayName});
   await heartsRef.get().then((posts) => {
     posts.forEach(doc => {
