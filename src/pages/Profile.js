@@ -122,7 +122,7 @@ export default class Profile extends Component {
   }
 
   _handleTaggedQuery() {
-    getUserTaggedPosts(this.state.userId).then((taggedData) => {
+    getUserTaggedPosts(this.state.userId, this.state.userProfile.displayName).then((taggedData) => {
       console.log(taggedData);
       this.setState({taggedData: taggedData});
       this.setState({searchLoading: false});

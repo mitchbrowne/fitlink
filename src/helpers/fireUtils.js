@@ -106,17 +106,6 @@ export const newPost = async (postDetails) => {
         taggedCount: firebase.firestore.FieldValue.increment(1)
       });
 
-      // userTaggedRef.collection('taggedPosts').doc(docRef.id).set({
-      //   displayName: postDetails.displayName,
-      //   userId: postDetails.userId,
-      //   title: postDetails.title,
-      //   image: postDetails.image,
-      //   tagged: postDetails.tagged,
-      //   hashtags: postDetails.hashtags,
-      //   createdAt: firebase.firestore.Timestamp.fromDate(new Date())
-      // }).then(() => {
-      //
-      // });
     })
 
     const heartRef = db.collection('hearts');
@@ -201,9 +190,6 @@ export const deletePost = async (postId, userId, postsCount, tagged) => {
         taggedCount: firebase.firestore.FieldValue.increment(-1)
       });
 
-      // userTaggedRef.collection('taggedPosts').doc(postId).delete().then(() => {
-      //   console.log('Successfully removed post from tagged user collection.');
-      // });
     })
 
   }).catch((error) => {
@@ -604,19 +590,17 @@ export const getUsersFollowingSelect = async (userSignedInId) => {
   });
 }
 
-export const getUserTaggedPosts = async (userProfileId) => {
+export const getUserTaggedPosts = async (userProfileId, userProfileDisplayName) => {
   const db = firebase.firestore();
-  const taggedPostsRef = db.collection('users').doc(userProfileId).collection('taggedPosts').orderBy('createdAt', 'desc');
+  const taggedPostsRef = db.collection('taggedPosts').where('tagged', 'array-contains', {userId: userProfileId, displayName: userProfileDisplayName});
 
   return await taggedPostsRef.get().then(posts => {
     let taggedPosts = [];
     posts.forEach(doc => {
-      console.log(doc.id);
       taggedPosts.push(doc);
     });
-    console.log(taggedPosts);
     return taggedPosts;
-  });
+  })
 }
 
 export const getUserFollowers = async (userProfileId) => {
