@@ -91,6 +91,7 @@ export const newPost = async (postDetails) => {
       displayName: postDetails.displayName,
       userId: postDetails.userId,
       title: postDetails.title,
+      link: postDetails.link,
       image: postDetails.image,
       tagged: postDetails.tagged,
       hashtags: postDetails.hashtags,
@@ -149,7 +150,6 @@ export const editPost = async (postDetails) => {
     const taggedPostsRef = db.collection('taggedPosts').doc(postDetails.postId);
     taggedPostsRef.set({
       title: postDetails.title,
-      desc: postDetails.desc,
       image: postDetails.image,
       link: postDetails.link,
       hashtags: postDetails.hashtags,
@@ -270,6 +270,20 @@ export const queryHashtags = async (hashtagValues) => {
   }).catch((error) => {
     console.log(error.message);
   });
+}
+
+export const updateImage = async (imageFile, userId) => {
+  const storageRef = firebase.storage().ref();
+  const profileImageRef = storageRef.child(`profileImages/${userId}_profile_image.jpg`);
+
+  const task = profileImageRef.put(imageFile);
+
+  return await task.then((snapshot) => {
+    const urlRef = snapshot.ref.getDownloadURL();
+    return urlRef.then(url => {
+      return url;
+    })
+  })
 }
 
 export const updateSettings = async (email, displayName, bio, photoURL) => {

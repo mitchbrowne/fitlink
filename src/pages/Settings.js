@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import firebase from 'firebase';
-import { updateSettings } from '../helpers/fireUtils';
+import { updateSettings, updateImage } from '../helpers/fireUtils';
+
+import UploadImage from '../components/UploadImage';
 
 import {
   Container,
@@ -35,6 +37,13 @@ export default (props) => {
     }).catch((error) => {
       setError(error.message);
     })
+  }
+
+  const _handleImage = async (imageFile) => {
+    console.log(imageFile);
+    const imageURL = await updateImage(imageFile, user.userId);
+    console.log(imageURL);
+    setPhotoURL(imageURL);
   }
 
   if (user === null) {
@@ -87,12 +96,8 @@ export default (props) => {
               </Form.Group>
               <Form.Group controlId="photoURL">
                 <Form.Label>Profile Picture</Form.Label>
-                <Image src={photoURL} alt="profile picture" className="block" roundedCircle/>
-                <Form.Control
-                  type="url"
-                  value={photoURL ? photoURL : ''}
-                  onChange={(e) => {setPhotoURL(e.target.value)}}
-                 />
+                <Image src={photoURL} alt="profile picture" className="profile-settings-photo block" roundedCircle/>
+                 <UploadImage handleImage={_handleImage}/>
               </Form.Group>
               <div className="text-center">
                 <Button variant="primary" type="submit">
