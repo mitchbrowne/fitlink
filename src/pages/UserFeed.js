@@ -168,71 +168,71 @@ const UserFeedPosts = (props) => {
     const p = post.data();
     const pId = post.id;
     return (
-      <Row key={pId} className="d-flex justify-content-center  mt-4">
-        <CardGroup>
-          <Card className="w-75 mb-4">
-            <Card.Img variant="top" src={p.image} alt={`${p.title} post image`} />
-          </Card>
-          <Card className="w-75 mb-4">
-            <Card.Body>
-              <Row>
-                <Link to={`/workouts/show/${pId}`}>
-                  <Card.Title>{p.title}</Card.Title>
-                </Link>
-              </Row>
-              <Row>
-                <Image src={p.photoURL} className="navbar-photoURL" roundedCircle />
-                <Link to={`/profile/${p.userId}`}>
-                  <Card.Subtitle className="mb-4 text-muted">{p.displayName}</Card.Subtitle>
-                </Link>
-              </Row>
-              <Row>
-                <Card.Text className="mb-4">{p.desc}</Card.Text>
-              </Row>
-              <Row>
-                <Card.Subtitle className="mb-2 text-muted">
-                  {
-                    p.tagged.map((user) => (
-                      <Link to={`/profile/${user.userId}`}>
-                        @{user.displayName}
-                      </Link>
-                    ))
-                  }
-                </Card.Subtitle>
-              </Row>
-              <Row>
-                <Card.Subtitle className="mb-2 text-muted">
-                  {
-                    p.hashtags.map((hashtag) => (
-                      <Link to={`/explore/2/${hashtag}`}>
-                        #{hashtag}
-                      </Link>
-                    ))
-                  }
-                </Card.Subtitle>
-              </Row>
-              <Row>
-                <Card.Text>
-                  {props.postsHeartCount[pId]} Hearts
-                </Card.Text>
-              </Row>
-              <Row>
-                <Card.Link as={Link} to="#" name={pId} onClick={(e) => {_handleHeartClick(e, props.postsHeartStatus[pId])}}>{
-                  props.postsHeartStatus[pId]
-                  ? ('Unlike')
-                  : ('Like')
-                }</Card.Link>
-                <Card.Link href={`${p.link}`} target="_blank">Link</Card.Link>
-              </Row>
-            </Card.Body>
-            <Card.Footer>
-              <small className="mb-4 text-muted" >
-                <Timestamp date={p.createdAt.toDate()}/>
-              </small>
-            </Card.Footer>
-          </Card>
-        </CardGroup>
-      </Row>
+        <Row key={pId} className="d-flex justify-content-center  mt-4">
+          <CardGroup>
+            <Card className="w-75 mb-4">
+              <Card.Img variant="top" src={p.image} alt={`${p.title} post image`} />
+            </Card>
+            <Card className="w-75 mb-4">
+              <Card.Body>
+                <Row>
+                  <Link to={`/workouts/show/${pId}`}>
+                    <Card.Title>{p.title}</Card.Title>
+                  </Link>
+                </Row>
+                <Row>
+                  <Image src={p.photoURL} className="navbar-photoURL" roundedCircle />
+                  <Link to={`/profile/${p.userId}`}>
+                    <Card.Subtitle className="mb-4 text-muted">{p.displayName}</Card.Subtitle>
+                  </Link>
+                </Row>
+                <Row>
+                  <Card.Text className="mb-4">{p.desc}</Card.Text>
+                </Row>
+                <Row>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    {
+                      p.tagged.map((user) => (
+                        <Link to={`/profile/${user.userId}`}>
+                          @{user.displayName}
+                        </Link>
+                      ))
+                    }
+                  </Card.Subtitle>
+                </Row>
+                <Row>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    {
+                      p.hashtags.map((hashtag) => (
+                        <Link to={`/explore/2/${hashtag}`}>
+                          #{hashtag}
+                        </Link>
+                      ))
+                    }
+                  </Card.Subtitle>
+                </Row>
+                <Row>
+                  <Card.Text>
+                    {props.postsHeartCount[pId]} Hearts
+                  </Card.Text>
+                </Row>
+                <Row>
+                  <Card.Link as={Link} to="#" name={pId} onClick={(e) => {_handleHeartClick(e, props.postsHeartStatus[pId])}}>{
+                    props.postsHeartStatus[pId]
+                    ? ('Unlike')
+                    : ('Like')
+                  }</Card.Link>
+                  <Card.Link href={`${p.link}`} target="_blank">Link</Card.Link>
+                </Row>
+              </Card.Body>
+              <Card.Footer>
+                <small className="mb-4 text-muted" >
+                  <Timestamp date={p.createdAt.toDate()}/>
+                </small>
+              </Card.Footer>
+            </Card>
+          </CardGroup>
+        </Row>
     )
   });
 

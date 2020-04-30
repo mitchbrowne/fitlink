@@ -30,3 +30,28 @@ code {
 .workout-post-image {
   width: 20vw;
 }
+
+.heart-count {
+  font-size: 2em;
+  display: inline-block;
+}
+
+.heart-icon {
+  display: inline-block;
+  color: black;
+}
+
+.heart-icon:hover {
+  cursor: pointer;
+  color: black;
+}
+
+.main-custom-link {
+  text-decoration: none;
+  color: #5B8090;
+}
+
+.main-custom-link:hover {
+  text-decoration: none;
+  color: #1F282D;
+}
