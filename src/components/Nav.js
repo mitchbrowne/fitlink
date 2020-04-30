@@ -43,7 +43,7 @@ export default (props) => {
         <Navbar.Collapse id="basic-navbar-nav">
             {user &&
               <Nav className="mr-auto">
-                <Nav.Link as={Link} to="/feed">Feed</Nav.Link>
+                <Nav.Link as={Link} to="/home">Home</Nav.Link>
                 <Nav.Link as={Link} to="/explore">Explore</Nav.Link>
               </Nav>
             }

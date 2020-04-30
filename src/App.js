@@ -6,7 +6,7 @@ import { getUser } from './helpers/fireUtils';
 import SignedInPermission from './components/SignedInPermission';
 import Layout from './components/Layout';
 
-import Home from './pages/Home';
+import LandingPage from './pages/LandingPage';
 import UserFeed from './pages/UserFeed';
 import Explore from './pages/Explore';
 import Settings from './pages/Settings';
@@ -83,13 +83,13 @@ export default class App extends Component {
               exact
               path="/"
               render={(props) => (
-                <Home {...props} user={this.state.user} />
+                <LandingPage {...props} user={this.state.user} />
               )}
             />
             <SignedInPermission {...this.props} user={this.state.user}>
               <Route
                 exact
-                path="/feed"
+                path="/home"
                 render={(props) => (
                   <UserFeed {...props} user={this.state.user} />
                 )}

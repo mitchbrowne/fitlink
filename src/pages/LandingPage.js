@@ -6,12 +6,12 @@ import {
   Col
 } from 'react-bootstrap';
 
-export default class Home extends Component {
+export default class LandingPage extends Component {
   render() {
     return (
       <div>
         <Container className="justify-content-md-center">
-          <h1>Home Page</h1>
+          <h1>Landing Page</h1>
         </Container>
       </div>
     )
