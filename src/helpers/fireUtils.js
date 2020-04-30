@@ -327,6 +327,31 @@ export const updateSettings = async (email, displayName, bio, photoURL) => {
     })
   })
 
+  const taggedPostsTaggedRef = db.collection('taggedPosts').where('tagged', 'array-contains', {userId: user.uid, displayName: currentDisplayName});
+  await taggedPostsTaggedRef.get().then((posts) => {
+    posts.forEach(doc => {
+      db.collection('taggedPosts').doc(doc.id).set({
+        tagged: [{
+          userId: user.uid,
+          displayName: displayName
+        }]
+      }, {merge: true}).then(() => {
+        console.log('Updated tagged posts tagged');
+      })
+    })
+  })
+
+  const taggedPostsOwnerRef = db.collection('taggedPosts').where('userId', '==', user.uid);
+  await taggedPostsOwnerRef.get().then((posts) => {
+    posts.forEach(doc => {
+      db.collection('taggedPosts').doc(doc.id).set({
+        displayName: displayName
+      }, {merge: true}).then(() => {
+        console.log('Updated tagged posts owner');
+      })
+    })
+  })
+
   const heartsRef = db.collection('hearts').where('users', 'array-contains', {userId: user.uid, displayName: currentDisplayName});
   await heartsRef.get().then((posts) => {
     posts.forEach(doc => {
