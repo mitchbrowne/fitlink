@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import UploadImage from '../components/UploadImage';
 
 import {
   Container,
@@ -13,7 +12,6 @@ export default class Home extends Component {
       <div>
         <Container className="justify-content-md-center">
           <h1>Home Page</h1>
-          <UploadImage />
         </Container>
       </div>
     )

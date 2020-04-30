@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import InputTagged from '../components/InputTagged';
 import InputTag from '../components/InputTag';
-import { newPost } from '../helpers/fireUtils';
+import UploadImage from '../components/UploadImage';
+import { newPost, addImage } from '../helpers/fireUtils';
 
 import {
   Container,
@@ -15,7 +16,7 @@ export default (props) => {
   const [error, setError] = useState('');
   const [title, setTitle] = useState('Testing Times');
   const [desc, setDesc] = useState('Really hard stuff');
-  const [image, setImage] = useState('https://i.ytimg.com/vi/yRCUfumiqhk/maxresdefault.jpg');
+  const [image, setImage] = useState('');
   const [hashtags, setHashtags] = useState(['Test it']);
   const [tagged, setTagged] = useState([]);
   const [link, setLink] = useState('https://www.youtube.com/watch?v=yRCUfumiqhk');
@@ -38,23 +39,27 @@ export default (props) => {
 
     convertTaggedObjects();
 
-    const postDetails = {
-      userId: props.user.userId,
-      postsCount: props.user.postsCount,
-      displayName: props.user.displayName,
-      photoURL: props.user.photoURL,
-      title: title,
-      desc: desc,
-      image: image,
-      link: link,
-      hashtags: hashtags,
-      tagged: newTagged
-    }
-    console.log('Post Details: ', postDetails);
-    const docRef = await newPost(postDetails).then((data) => {
-      props.fetchUpdatedUser(props.user.userId);
-      props.history.push(`/workouts/show/${data.id}`);
-    });
+    await addImage(image, props.user.userId, title).then(async (url) => {
+      const postDetails = {
+        userId: props.user.userId,
+        postsCount: props.user.postsCount,
+        displayName: props.user.displayName,
+        photoURL: props.user.photoURL,
+        title: title,
+        desc: desc,
+        image: url,
+        link: link,
+        hashtags: hashtags,
+        tagged: newTagged
+      }
+      console.log('Post Details: ', postDetails);
+      const docRef = await newPost(postDetails).then((data) => {
+        props.fetchUpdatedUser(props.user.userId);
+        props.history.push(`/workouts/show/${data.id}`);
+      });
+    })
+
+
   }
 
   const _handleTagged = (taggedData) => {
@@ -65,6 +70,10 @@ export default (props) => {
   const _handleHashtags = (hashtagsData) => {
     setHashtags(hashtagsData);
     console.log(hashtagsData);
+  }
+
+  const _handleImage = async (imageFile) => {
+    setImage(imageFile);
   }
 
   return (
@@ -101,12 +110,7 @@ export default (props) => {
               </Form.Group>
               <Form.Group controlId="image">
                 <Form.Label>Add Image</Form.Label>
-                <Form.Control
-                  required
-                  type="url"
-                  value={image}
-                  onChange={(e) => {setImage(e.target.value)}}
-                 />
+                <UploadImage handleImage={_handleImage}/>
               </Form.Group>
               <Form.Group controlId="link">
                 <Form.Label>Link to Workout Video</Form.Label>

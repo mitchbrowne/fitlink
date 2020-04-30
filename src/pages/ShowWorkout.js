@@ -58,7 +58,7 @@ export default class ShowWorkout extends Component {
   async _handleDeletePost() {
     const sure = window.confirm('Are you sure?');
     if (!sure) return;
-    const deleteData = await deletePost(this.state.postId, this.state.post.userId, this.props.user.postsCount, this.state.post.tagged).then(async () => {
+    const deleteData = await deletePost(this.state.postId, this.state.post.userId, this.props.user.postsCount, this.state.post.tagged, this.state.post.image).then(async () => {
       this.props.fetchUpdatedUser(this.props.user.userId);
 
       this.props.history.push(`/profile/${this.state.post.userId}`);

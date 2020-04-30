@@ -17,7 +17,6 @@ export default (props) => {
   const [postDetails, setPostDetails] = useState(null);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
-  const [image, setImage] = useState('');
   const [hashtags, setHashtags] = useState('');
   const [friends, setFriends] = useState('');
   const [link, setLink] = useState('');
@@ -31,7 +30,6 @@ export default (props) => {
       setPostDetails(post);
       setTitle(post.title);
       setDesc(post.desc);
-      setImage(post.image);
       setLink(post.link);
       setHashtags(post.hashtags);
     }
@@ -48,7 +46,6 @@ export default (props) => {
       userId: props.user.userId,
       title: title,
       desc: desc,
-      image: image,
       link: link,
       hashtags: hashtags,
     }
@@ -103,15 +100,6 @@ export default (props) => {
                   type="text"
                   value={desc}
                   onChange={(e) => {setDesc(e.target.value)}}
-                 />
-              </Form.Group>
-              <Form.Group controlId="image">
-                <Form.Label>Edit Image</Form.Label>
-                <Form.Control
-                  required
-                  type="url"
-                  value={image}
-                  onChange={(e) => {setImage(e.target.value)}}
                  />
               </Form.Group>
               <Form.Group controlId="link">

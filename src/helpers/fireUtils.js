@@ -134,7 +134,6 @@ export const editPost = async (postDetails) => {
   return await postRef.set({
     title: postDetails.title,
     desc: postDetails.desc,
-    image: postDetails.image,
     link: postDetails.link,
     hashtags: postDetails.hashtags,
   }, {merge: true}).then(() => {
@@ -143,14 +142,12 @@ export const editPost = async (postDetails) => {
     const userRef = db.collection('users').doc(postDetails.userId).collection('posts').doc(postDetails.postId);
     userRef.set({
       title: postDetails.title,
-      image: postDetails.image,
       hashtags: postDetails.hashtags,
     }, {merge: true});
 
     const taggedPostsRef = db.collection('taggedPosts').doc(postDetails.postId);
     taggedPostsRef.set({
       title: postDetails.title,
-      image: postDetails.image,
       link: postDetails.link,
       hashtags: postDetails.hashtags,
     }, {merge: true});
@@ -161,8 +158,13 @@ export const editPost = async (postDetails) => {
 
 }
 
-export const deletePost = async (postId, userId, postsCount, tagged) => {
+export const deletePost = async (postId, userId, postsCount, tagged, imageURL) => {
   const db = firebase.firestore();
+
+  const imageRef = firebase.storage().refFromURL(imageURL);
+  imageRef.delete().then(() => {
+    console.log('File deleted');
+  })
 
   const userRef = db.collection('users').doc(userId);
   userRef.update({
@@ -283,6 +285,18 @@ export const updateImage = async (imageFile, userId) => {
     return urlRef.then(url => {
       return url;
     })
+  })
+}
+
+export const addImage = async (imageFile, userId, title) => {
+  const storageRef = firebase.storage().ref();
+  const profileImageRef = storageRef.child(`postImages/${userId+title}_post_image.jpg`);
+
+  const task = profileImageRef.put(imageFile);
+
+  return await task.then((snapshot) => {
+    const urlRef = snapshot.ref.getDownloadURL();
+    return urlRef;
   })
 }
 
