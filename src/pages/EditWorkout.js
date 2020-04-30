@@ -97,7 +97,7 @@ export default (props) => {
                  />
               </Form.Group>
               <Form.Group controlId="desc">
-                <Form.Label>Description</Form.Label>
+                <Form.Label>How was it?</Form.Label>
                 <Form.Control
                   type="text"
                   value={desc}
@@ -114,7 +114,8 @@ export default (props) => {
                  />
               </Form.Group>
               <Form.Group controlId="tags">
-                <Form.Label>Tags</Form.Label>
+                <Form.Label>Hashtags</Form.Label>
+                <small>Type tag and hit enter</small>
                 <InputTag hashtags={hashtags} handleHashtags={_handleHashtags}/>
               </Form.Group>
               <div className="text-center">

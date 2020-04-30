@@ -21,6 +21,7 @@ export default (props) => {
   const [bio, setBio] = useState('');
   const [photoURL, setPhotoURL] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (props.user === null) return;
@@ -31,21 +32,27 @@ export default (props) => {
 
   const _handleSubmit = async (e) => {
     setError('Updating your settings, one sec...');
-
+    setLoading(true);
     e.preventDefault();
     await updateSettings(user.email, displayName, bio, photoURL).then(() => {
       setError('Changes saved!');
+      setLoading(false);
       props.fetchUpdatedUser(user.userId);
     }).catch((error) => {
       setError(error.message);
+      setLoading(false);
     })
   }
 
   const _handleImage = async (imageFile) => {
     console.log(imageFile);
+    setLoading(true);
+    setError('Uploading Profile Picture, one sec...');
     const imageURL = await updateImage(imageFile, user.userId);
     console.log(imageURL);
     setPhotoURL(imageURL);
+    setError('Uploaded! Make sure to save changes...');
+    setLoading(false);
   }
 
   if (user === null) {
@@ -102,9 +109,14 @@ export default (props) => {
                  <UploadImage handleImage={_handleImage}/>
               </Form.Group>
               <div className="text-center">
-                <Button variant="primary" type="submit">
-                  Save Changes
-                </Button>
+                {loading
+                  ? <Button variant="primary" type="submit" disabled>
+                    Save Changes
+                  </Button>
+                  : <Button variant="primary" type="submit">
+                    Save Changes
+                  </Button>
+                }
               </div>
 
             </Form>

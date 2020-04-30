@@ -32,7 +32,6 @@ export const getUserFeedPosts = async (userSignedInId) => {
       followingUsers.push(user.userId);
       return user.userId;
     })
-    // followingUsers = Object.keys(doc.data().users);
   });
 
   followingUsers.push(userSignedInId);
@@ -248,12 +247,10 @@ export const queryUsers = async (searchValue) => {
   return await usersRef.get().then(users => {
     let allUsers = [];
     users.forEach(doc => {
-      console.log(doc.data());
       allUsers.push(doc);
     });
     return allUsers;
   }).catch((error) => {
-    console.log(error.message);
   });
 }
 
@@ -270,7 +267,6 @@ export const queryHashtags = async (hashtagValues) => {
     });
     return allPosts;
   }).catch((error) => {
-    console.log(error.message);
   });
 }
 
@@ -303,7 +299,7 @@ export const addImage = async (imageFile, userId, title) => {
 export const updateSettings = async (email, displayName, bio, photoURL) => {
   const user = firebase.auth().currentUser;
   const currentDisplayName = user.displayName;
-  console.log(user.displayName);
+
   const currentPhotoURL = user.photoURL;
 
   await user.updateProfile({
@@ -399,14 +395,22 @@ export const updateSettings = async (email, displayName, bio, photoURL) => {
   await followingRef.get().then((users) => {
     users.forEach(doc => {
       console.log(doc.id);
-      db.collection('following').doc(doc.id).set({
-        users: [{
-          userId: user.uid,
-          displayName: displayName,
-          photoURL: photoURL
-        }]
-      }, {merge: true}).then(() => {
-        console.log('Updated following');
+      db.collection('following').doc(doc.id).update({
+          users: firebase.firestore.FieldValue.arrayRemove({
+            userId: user.uid,
+            displayName: currentDisplayName,
+            photoURL: currentPhotoURL
+        })
+      }).then(() => {
+        db.collection('following').doc(doc.id).set({
+          users: firebase.firestore.FieldValue.arrayUnion({
+            userId: user.uid,
+            displayName: displayName,
+            photoURL: photoURL
+          })
+        }, {merge: true}).then(() => {
+          console.log('Updated following');
+        })
       })
     })
   })
@@ -414,14 +418,22 @@ export const updateSettings = async (email, displayName, bio, photoURL) => {
   const followersRef = db.collection('followers').where('users', 'array-contains', {userId: user.uid, displayName: currentDisplayName, photoURL: currentPhotoURL});
   await followersRef.get().then((users) => {
     users.forEach(doc => {
-      db.collection('followers').doc(doc.id).set({
-        users: [{
+      db.collection('followers').doc(doc.id).update({
+        users: firebase.firestore.FieldValue.arrayRemove({
           userId: user.uid,
-          displayName: displayName,
-          photoURL: photoURL
-        }]
-      }, {merge: true}).then(() => {
-        console.log('Updated followers');
+          displayName: currentDisplayName,
+          photoURL: currentPhotoURL
+      })
+    }).then(() => {
+        db.collection('followers').doc(doc.id).set({
+          users: firebase.firestore.FieldValue.arrayUnion({
+            userId: user.uid,
+            displayName: displayName,
+            photoURL: photoURL
+          })
+        }, {merge: true}).then(() => {
+          console.log('Updated followers');
+        })
       })
     })
   })

@@ -101,7 +101,7 @@ export default (props) => {
                  />
               </Form.Group>
               <Form.Group controlId="desc">
-                <Form.Label>Description</Form.Label>
+                <Form.Label>How was it?</Form.Label>
                 <Form.Control
                   type="text"
                   value={desc}
@@ -109,7 +109,7 @@ export default (props) => {
                  />
               </Form.Group>
               <Form.Group controlId="image">
-                <Form.Label>Add Image</Form.Label>
+                <Form.Label>Add Photo</Form.Label>
                 <UploadImage handleImage={_handleImage}/>
               </Form.Group>
               <Form.Group controlId="link">
@@ -126,7 +126,8 @@ export default (props) => {
                 <InputTagged handleTagged={_handleTagged} tagged={tagged} user={props.user}/>
               </Form.Group>
               <Form.Group controlId="tags">
-                <Form.Label>Tags</Form.Label>
+                <Form.Label>Hashtags</Form.Label>
+                <small>Type tag and hit enter</small>
                 <InputTag handleHashtags={_handleHashtags} hashtags={hashtags}/>
               </Form.Group>
               <div className="text-center">
