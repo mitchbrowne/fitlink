@@ -264,6 +264,9 @@ export const queryHashtags = async (hashtagValues) => {
 
 export const updateSettings = async (email, displayName, bio, photoURL) => {
   const user = firebase.auth().currentUser;
+  const currentDisplayName = user.displayName;
+  console.log(user.displayName);
+  const currentPhotoURL = user.photoURL;
 
   await user.updateProfile({
     displayName: displayName,
@@ -287,6 +290,65 @@ export const updateSettings = async (email, displayName, bio, photoURL) => {
   }).catch(function(error) {
     return error.message;
   })
+
+  const postsRef = db.collection('posts').where('userId', '==', user.uid);
+  await postsRef.get().then((posts) => {
+    posts.forEach(doc => {
+      db.collection('posts').doc(doc.id).set({
+        displayName: displayName,
+        photoURL: photoURL
+      }, {merge: true}).then(() => {
+        console.log('Updated name and photo in posts');
+      });
+    })
+  })
+
+  const heartsRef = db.collection('hearts').where('users', 'array-contains', {userId: user.uid, displayName: currentDisplayName});
+  await heartsRef.get().then((posts) => {
+    posts.forEach(doc => {
+      db.collection('hearts').doc(doc.id).set({
+        users: [{
+          userId: user.uid,
+          displayName: displayName
+        }]
+      }, {merge: true}).then(() => {
+        console.log('Updated hearts');
+      })
+
+    })
+  });
+
+  const followingRef = db.collection('following').where('users', 'array-contains', {userId: user.uid, displayName: currentDisplayName, photoURL: currentPhotoURL});
+  await followingRef.get().then((users) => {
+    users.forEach(doc => {
+      console.log(doc.id);
+      db.collection('following').doc(doc.id).set({
+        users: [{
+          userId: user.uid,
+          displayName: displayName,
+          photoURL: photoURL
+        }]
+      }, {merge: true}).then(() => {
+        console.log('Updated following');
+      })
+    })
+  })
+
+  const followersRef = db.collection('followers').where('users', 'array-contains', {userId: user.uid, displayName: currentDisplayName, photoURL: currentPhotoURL});
+  await followersRef.get().then((users) => {
+    users.forEach(doc => {
+      db.collection('followers').doc(doc.id).set({
+        users: [{
+          userId: user.uid,
+          displayName: displayName,
+          photoURL: photoURL
+        }]
+      }, {merge: true}).then(() => {
+        console.log('Updated followers');
+      })
+    })
+  })
+
 }
 
 export const signIn = async (email, password) => {
@@ -319,17 +381,6 @@ export const signUp = async (email, password, displayName) => {
           displayName: displayName,
           photoURL: `https://api.adorable.io/avatars/290/${email}.png`
         }).then(async () => {
-
-          // await db.collection('following').doc(user.user.id).add({
-          //   users: []
-          // }).then(() => {
-          //   console.log('Successfull following on sign up');
-          // });
-          // await db.collection('followers').doc(user.user.id).add({
-          //   users: []
-          // }).then(() => {
-          //   console.log('Successfull followers on sign up');
-          // })
 
         }).catch((error) => {
           console.log('User not added.');
