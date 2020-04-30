@@ -11,8 +11,8 @@ import {
 } from 'react-bootstrap'
 
 export default (props) => {
-  const [email, setEmail] = useState('mfbrowne18@gmail.com');
-  const [password, setPassword] = useState('chicken');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const _handleSubmit = async (e) => {

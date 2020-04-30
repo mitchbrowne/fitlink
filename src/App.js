@@ -7,7 +7,6 @@ import SignedInPermission from './components/SignedInPermission';
 import Layout from './components/Layout';
 
 import Home from './pages/Home';
-import Users from './pages/Users';
 import UserFeed from './pages/UserFeed';
 import Explore from './pages/Explore';
 import Settings from './pages/Settings';
@@ -100,13 +99,6 @@ export default class App extends Component {
                 path="/explore/:searchType?/:searchValue?"
                 render={(props) => (
                   <Explore {...props} user={this.state.user} />
-                )}
-              />
-              <Route
-                exact
-                path="/users"
-                render={(props) => (
-                  <Users {...props} user={this.state.user} />
                 )}
               />
               <Route

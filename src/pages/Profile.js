@@ -147,30 +147,39 @@ export default class Profile extends Component {
 
   render() {
     if (this.state.userProfile === null || this.state.posts === null) return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
+      <div className="loading-spinner-container">
+        <Spinner className="loading-spinner" animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      </div>
     );
 
     return (
       <div>
         <Container className="justify-content-md-center">
-          <UserProfileHeader
-            owner={this.state.owner}
-            userProfile={this.state.userProfile}
-            following={this.state.following}
-            followersCount={this.state.followersCount}
-            handleFollowChange={this._handleFollowChange}
-            handleViewClick={this._handleViewClick}
-          />
-          <ProfileContent
-            searchLoading={this.state.searchLoading}
-            view={this.state.view}
-            posts={this.state.posts}
-            followingData={this.state.followingData}
-            followersData={this.state.followersData}
-            taggedData={this.state.taggedData}
-          />
+          <Row className="margin-bottom-profile">
+            <UserProfileHeader
+              owner={this.state.owner}
+              userProfile={this.state.userProfile}
+              following={this.state.following}
+              followersCount={this.state.followersCount}
+              handleFollowChange={this._handleFollowChange}
+              handleViewClick={this._handleViewClick}
+            />
+          </Row>
+          <hr />
+          <Row className="margin-top-profile justify-content-md-center">
+            <ProfileContent
+              searchLoading={this.state.searchLoading}
+              view={this.state.view}
+              posts={this.state.posts}
+              followingData={this.state.followingData}
+              followersData={this.state.followersData}
+              taggedData={this.state.taggedData}
+            />
+          </Row>
+
+
         </Container>
       </div>
 
@@ -180,15 +189,16 @@ export default class Profile extends Component {
 
 const ProfileContent = (props) => {
   if (props.searchLoading) return (
-    <Spinner animation="border" role="status">
-      <span className="sr-only">Loading...</span>
-    </Spinner>
+      <div className="loading-spinner-container">
+        <Spinner className="loading-spinner" animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      </div>
   )
 
   if (props.view === 'posts') {
     return (
       <div>
-        <h3>Posts</h3>
         {_.isEmpty(props.posts)
           ? <p>No posts</p>
           : <UserProfilePosts posts={props.posts} />
@@ -201,7 +211,6 @@ const ProfileContent = (props) => {
     console.log(props.followingData);
     return (
       <div>
-        <h3>Following</h3>
         {_.isEmpty(props.followingData)
           ? <p>No following</p>
           : <UserProfileFollow followData={props.followingData} />
@@ -214,7 +223,6 @@ const ProfileContent = (props) => {
     console.log(props.followersData);
     return (
       <div>
-        <h3>Followers</h3>
         {_.isEmpty(props.followersData)
           ? <p>No followers</p>
           : <UserProfileFollow followData={props.followersData} />
@@ -227,7 +235,6 @@ const ProfileContent = (props) => {
     console.log(props.taggedData);
     return (
       <div>
-        <h3>Tagged</h3>
         {_.isEmpty(props.taggedData)
           ? <p>No tagged posts</p>
           : <UserProfileTagged taggedData={props.taggedData} />
@@ -252,49 +259,54 @@ const UserProfileHeader = (props) => {
   }
 
   return (
-    <div>
-      <Row md="6" className="justify-content-md-center">
-        <Col xs lg="2">
-          <Image src={props.userProfile.photoURL} roundedCircle alt="user profile image" className="profile-image"/>
-        </Col>
-        <Col xs lg="6" className="justify-content-md-center">
-          <h1>{props.userProfile.displayName}</h1>
-          <h4>{props.userProfile.bio}</h4>
-          <Row>
-            <Col>
-              <Link to={'#'} name={'followers'} onClick={_handleViewClick}>
-                {props.followersCount} Followers
-              </Link>
-            </Col>
-            <Col>
-              <Link to={'#'} name={'following'} onClick={_handleViewClick}>
-                {props.userProfile.followingCount} Following
-              </Link>
-            </Col>
-            <Col>
-              <Link to={'#'} name={'posts'} onClick={_handleViewClick}>
-                {props.userProfile.postsCount} Posts
-              </Link>
-            </Col>
-            <Col>
-              <Link to={'#'} name={'tagged'} onClick={_handleViewClick}>
-                {props.userProfile.taggedCount} Tagged
-              </Link>
-            </Col>
-          </Row>
-          <Row>
-            {!props.owner &&
-              <Button size="sm" onClick={_handleFollowClick}>
-                {props.following
-                  ? ('Following')
-                  : ('Follow')
+    <Container>
+      <div>
+        <Row md="6" className="mt-4 justify-content-md-center">
+          <Col xs lg="2">
+            <Image src={props.userProfile.photoURL} roundedCircle alt="user profile image" className="profile-image"/>
+          </Col>
+          <Col xs lg="6" className="justify-content-md-center">
+            <h1>{props.userProfile.displayName}</h1>
+            <h4>{props.userProfile.bio}</h4>
+            <Row className="mb-4">
+              <Col>
+                <Link className="main-custom-link" to={'#'} name={'followers'} onClick={_handleViewClick}>
+                  {props.followersCount} Followers
+                </Link>
+              </Col>
+              <Col>
+                <Link className="main-custom-link" to={'#'} name={'following'} onClick={_handleViewClick}>
+                  {props.userProfile.followingCount} Following
+                </Link>
+              </Col>
+              <Col>
+                <Link className="main-custom-link" to={'#'} name={'posts'} onClick={_handleViewClick}>
+                  {props.userProfile.postsCount} Posts
+                </Link>
+              </Col>
+              <Col>
+                <Link className="main-custom-link" to={'#'} name={'tagged'} onClick={_handleViewClick}>
+                  {props.userProfile.taggedCount} Tagged
+                </Link>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                {!props.owner &&
+                  <Button size="sm" onClick={_handleFollowClick}>
+                    {props.following
+                      ? ('Following')
+                      : ('Follow')
+                    }
+                  </Button>
                 }
-              </Button>
-            }
-          </Row>
-        </Col>
-      </Row>
-    </div>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </div>
+    </Container>
+
   )
 }
 
@@ -312,7 +324,7 @@ const UserProfilePosts = (props) => {
               <Card.Img variant="top" src={p.image} alt={`${p.title} post image`} className='profile-post-image' />
               <Card.Body>
                 <Row>
-                  <Link to={`/workouts/show/${post.id}`}>
+                  <Link className="main-custom-link" to={`/workouts/show/${post.id}`}>
                   <h4>{p.title}</h4>
                   </Link>
                 </Row>
@@ -320,8 +332,8 @@ const UserProfilePosts = (props) => {
                   <p>
                     {
                       hashtags.map((hashtag) => (
-                        <Link to={`/explore/2/${hashtag}`}>
-                          #{hashtag}
+                        <Link className="main-custom-link" to={`/explore/2/${hashtag}`}>
+                          #{hashtag}&ensp;
                         </Link>
                       ))
                     }
@@ -356,25 +368,26 @@ const UserProfileFollow = (props) => {
     const u = followUser;
 
     return (
-      <Row key={u.userId} md="12" className="d-flex justify-content-center mt-4">
-        <Col xs lg="8">
-          <Image src={u.photoURL} roundedCircle alt="user profile image" className="profile-image"/>
-        </Col>
-        <Col xs ls="4" className="justify-content-md-center">
-          <Link to={`/profile/${u.userId}`} >
-            <h3>{u.displayName}</h3>
-          </Link>
-        </Col>
-      </Row>
+      <div>
+        <Row key={u.userId} justifyContent="center" alignItems="center" className="d-flex justify-content-center mt-4">
+          <Col xs lg="6">
+            <Image src={u.photoURL} roundedCircle alt="user profile image" className="profile-image"/>
+          </Col>
+          <Col xs ls="6" className="justify-contents-md-center text-center">
+            <Link className="mt-6 main-custom-link text-center" to={`/profile/${u.userId}`} >
+              <h3>{u.displayName}</h3>
+            </Link>
+          </Col>
+        </Row>
+        <hr />
+      </div>
     )
   })
 
   return (
     <div>
-      <Container>
-        <Row>
+      <Container className="justify-content-center">
           {follow}
-        </Row>
       </Container>
     </div>
   )

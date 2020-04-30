@@ -1,7 +1,7 @@
 import React, { Component, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { requestUserFeedPosts, getUserFeedPosts, isHearted, addHeart, removeHeart } from '../helpers/fireUtils';
-import Timestamp from 'react-timestamp';
+import moment from 'moment';
 
 import {
   Container,
@@ -134,13 +134,15 @@ export default class UserFeed extends Component {
   render() {
 
     if (this.state.user === null || this.state.posts === null || this.state.postsHeartStatus === null) return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
+      <div className='loading-spinner-container'>
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      </div>
     )
 
     if (this.state.user === null || this.state.posts.length === 0) return (
-      <h1>You have no posts... Maybe follow some friends?</h1>
+      <h4>You have no posts... Maybe follow some friends?</h4>
     )
 
     return (
@@ -161,7 +163,7 @@ export default class UserFeed extends Component {
 const UserFeedPosts = (props) => {
 
   const _handleHeartClick = (e, heartStatus) => {
-    props.handleHeartClick(e.target.name, heartStatus);
+    props.handleHeartClick(e.target.id, heartStatus);
   }
 
   const allPosts = props.posts.map((post) => {
@@ -176,58 +178,84 @@ const UserFeedPosts = (props) => {
             <Card className="w-75 mb-4">
               <Card.Body>
                 <Row>
-                  <Link to={`/workouts/show/${pId}`}>
-                    <Card.Title>{p.title}</Card.Title>
-                  </Link>
+                  <Col xs={12} lg="9">
+                    <Link className="main-custom-link" to={`/workouts/show/${pId}`}>
+                      <h1>{p.title}</h1>
+                    </Link>
+                  </Col>
+                  <Col xs="12" lg="3">
+                    <Image src={p.photoURL} className="navbar-photoURL mr-2" roundedCircle />
+                    <Card.Link className="main-custom-link" as={Link} to={`/profile/${p.userId}`}>
+                      {p.displayName}
+                    </Card.Link>
+                  </Col>
                 </Row>
                 <Row>
-                  <Image src={p.photoURL} className="navbar-photoURL" roundedCircle />
-                  <Link to={`/profile/${p.userId}`}>
-                    <Card.Subtitle className="mb-4 text-muted">{p.displayName}</Card.Subtitle>
-                  </Link>
+                  <Col>
+                    <Card.Text className="mb-4">{p.desc}</Card.Text>
+                  </Col>
+                </Row>
+                <Row className="mb-2">
+                  <Col>
+                    <Card.Subtitle className="mb-2 text-muted">
+                      {
+                        p.hashtags.map((hashtag) => (
+                          <Link className="main-custom-link" to={`/explore/2/${hashtag}`}>
+                            #{hashtag}&ensp;
+                          </Link>
+                        ))
+                      }
+                    </Card.Subtitle>
+                  </Col>
                 </Row>
                 <Row>
-                  <Card.Text className="mb-4">{p.desc}</Card.Text>
+                  <Col>
+                    <Card.Subtitle className="mb-2 text-muted">
+                      {
+                        p.tagged.map((user) => (
+                          <Link className="main-custom-link" to={`/profile/${user.userId}`}>
+                            @{user.displayName}&ensp;
+                          </Link>
+                        ))
+                      }
+                    </Card.Subtitle>
+                  </Col>
                 </Row>
-                <Row>
-                  <Card.Subtitle className="mb-2 text-muted">
-                    {
-                      p.tagged.map((user) => (
-                        <Link to={`/profile/${user.userId}`}>
-                          @{user.displayName}
-                        </Link>
-                      ))
-                    }
-                  </Card.Subtitle>
-                </Row>
-                <Row>
-                  <Card.Subtitle className="mb-2 text-muted">
-                    {
-                      p.hashtags.map((hashtag) => (
-                        <Link to={`/explore/2/${hashtag}`}>
-                          #{hashtag}
-                        </Link>
-                      ))
-                    }
-                  </Card.Subtitle>
-                </Row>
-                <Row>
-                  <Card.Text>
-                    {props.postsHeartCount[pId]} Hearts
-                  </Card.Text>
-                </Row>
-                <Row>
-                  <Card.Link as={Link} to="#" name={pId} onClick={(e) => {_handleHeartClick(e, props.postsHeartStatus[pId])}}>{
-                    props.postsHeartStatus[pId]
-                    ? ('Unlike')
-                    : ('Like')
-                  }</Card.Link>
-                  <Card.Link href={`${p.link}`} target="_blank">Link</Card.Link>
+                <Row className="align-baseline">
+                  <Col>
+                    <div className="heart-count mr-4">
+                      {props.postsHeartCount[pId]}
+                    </div>
+                      <div className="heart-icon mr-4" id={pId} onClick={(e) => {_handleHeartClick(e, props.postsHeartStatus[pId])}}>
+                        <div>
+                          {
+                            props.postsHeartStatus[pId]
+                            ? <svg id={pId} class="bi bi-heart-fill" width="2em" height="2em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path id={pId} fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" clip-rule="evenodd"/>
+                              </svg>
+                            : <svg id={pId} class="bi bi-heart" width="2em" height="2em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path id={pId} fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 01.176-.17C12.72-3.042 23.333 4.867 8 15z" clip-rule="evenodd"/>
+                              </svg>
+                          }
+                        </div>
+
+                      </div>
+                      <div className="heart-icon">
+                          <Card.Link className="heart-icon" href={`${p.link}`} target="_blank">
+                            <svg class="bi bi-link" width="2em" height="2em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M6.354 5.5H4a3 3 0 000 6h3a3 3 0 002.83-4H9c-.086 0-.17.01-.25.031A2 2 0 017 10.5H4a2 2 0 110-4h1.535c.218-.376.495-.714.82-1z"/>
+                              <path d="M6.764 6.5H7c.364 0 .706.097 1 .268A1.99 1.99 0 019 6.5h.236A3.004 3.004 0 008 5.67a3 3 0 00-1.236.83z"/>
+                              <path d="M9 5.5a3 3 0 00-2.83 4h1.098A2 2 0 019 6.5h3a2 2 0 110 4h-1.535a4.02 4.02 0 01-.82 1H12a3 3 0 100-6H9z"/>
+                              <path d="M8 11.33a3.01 3.01 0 001.236-.83H9a1.99 1.99 0 01-1-.268 1.99 1.99 0 01-1 .268h-.236c.332.371.756.66 1.236.83z"/>
+                            </svg>
+                          </Card.Link>
+                      </div>
+                  </Col>
                 </Row>
               </Card.Body>
               <Card.Footer>
                 <small className="mb-4 text-muted" >
-                  <Timestamp date={p.createdAt.toDate()}/>
+                  {moment(p.createdAt.toDate()).format('LLLL')}
                 </small>
               </Card.Footer>
             </Card>

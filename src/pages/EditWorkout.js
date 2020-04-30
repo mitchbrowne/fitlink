@@ -39,6 +39,8 @@ export default (props) => {
   }, [props]);
 
   const _handleSubmit = async (e) => {
+    setError('Updating your workout, one sec...');
+
     e.preventDefault();
 
     const postDetails = {

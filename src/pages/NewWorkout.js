@@ -14,19 +14,19 @@ import {
 
 export default (props) => {
   const [error, setError] = useState('');
-  const [title, setTitle] = useState('Testing Times');
-  const [desc, setDesc] = useState('Really hard stuff');
+  const [title, setTitle] = useState('');
+  const [desc, setDesc] = useState('');
   const [image, setImage] = useState('');
-  const [hashtags, setHashtags] = useState(['Test it']);
+  const [hashtags, setHashtags] = useState([]);
   const [tagged, setTagged] = useState([]);
-  const [link, setLink] = useState('https://www.youtube.com/watch?v=yRCUfumiqhk');
+  const [link, setLink] = useState('');
 
   const _handleSubmit = async (e) => {
     if (title === '' || desc === '' || image === '' || link === '') {
       setError('Please fill out all fields');
       return;
     }
-
+    setError('Uploading your workout, one sec...');
     e.preventDefault();
 
     let newTagged = [];
@@ -80,7 +80,7 @@ export default (props) => {
     <div>
       <Container>
         <Row className="justify-content-md-center">
-          <Col md="2">
+          <Col md="4">
             <h1>Post Workout</h1>
           </Col>
         </Row>

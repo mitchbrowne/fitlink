@@ -11,10 +11,10 @@ import {
 } from 'react-bootstrap'
 
 export default (props) => {
-  const [displayName, setDisplayName] = useState('Bridget');
-  const [email, setEmail] = useState('bridget@gmail.com');
-  const [password, setPassword] = useState('chicken');
-  const [confirmPassword, setConfirmPassword] = useState('chicken');
+  const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
   const _handleSubmit = async (e) => {

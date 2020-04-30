@@ -30,6 +30,8 @@ export default (props) => {
   }, [props])
 
   const _handleSubmit = async (e) => {
+    setError('Updating your settings, one sec...');
+
     e.preventDefault();
     await updateSettings(user.email, displayName, bio, photoURL).then(() => {
       setError('Changes saved!');

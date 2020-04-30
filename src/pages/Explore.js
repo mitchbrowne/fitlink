@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { queryUsers, queryHashtags } from '../helpers/fireUtils';
-import Timestamp from 'react-timestamp';
+import moment from 'moment';
 
 import SearchBar from '../components/SearchBar';
 
@@ -21,9 +21,9 @@ export default class Explore extends Component {
     this.state = {
       searchLoading: false,
       searchValue: '',
-      searchType: 1,
+      searchType: 2,
       userSearchResults: [],
-      hashtagSearchResults: [],
+      hashtagSearchResults: null,
     }
 
     this._handleSearchSubmit = this._handleSearchSubmit.bind(this);
@@ -42,8 +42,6 @@ export default class Explore extends Component {
   }
 
   async _handleSearchSubmit(searchValue, searchType) {
-    console.log(searchValue);
-    console.log(searchType);
 
     if (searchType === 2) {
       this.setState({searchLoading: true});
@@ -69,11 +67,12 @@ export default class Explore extends Component {
   render() {
     return (
       <div>
-        <Container>
-          <h1>
-            Explore
-          </h1>
+        <Container className="justify-content-md-center">
+          <Row className="margin-top-profile margin-bottom-profile justify-content-md-center">
           <SearchBar searchType={this.state.searchType} searchValue={this.state.searchValue} handleSearchSubmit={this._handleSearchSubmit} />
+        </Row>
+          <hr />
+          <Row className="margin-top-profile justify-content-md-center">
           <SearchContent
             searchLoading={this.state.searchLoading}
             searchValue={this.state.searchValue}
@@ -81,6 +80,7 @@ export default class Explore extends Component {
             hashtagResults={this.state.hashtagSearchResults}
             searchType={this.state.searchType}
           />
+        </Row>
         </Container>
       </div>
     )
@@ -89,9 +89,11 @@ export default class Explore extends Component {
 
 const SearchContent = (props) => {
   if (props.searchLoading) return (
-    <Spinner animation="border" role="status">
-      <span className="sr-only">Loading...</span>
-    </Spinner>
+    <div className="loading-spinner-container">
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    </div>
   )
 
   if (props.searchType === 2) return (
@@ -109,6 +111,10 @@ const SearchContent = (props) => {
 }
 
 const ShowHashtagResults = (props) => {
+  if (props.hashtagResults === null) return (
+    <h4>...</h4>
+  );
+
   if (props.hashtagResults.length === 0) return (
     <h4>No Results</h4>
   );
@@ -125,45 +131,53 @@ const ShowHashtagResults = (props) => {
           <Card className="w-75 mb-4">
             <Card.Body>
               <Row>
-                <Link to={`/workouts/show/${post.id}`}>
-                  <Card.Title>{p.title}</Card.Title>
-                </Link>
+                <Col xs={12} lg="8">
+                  <Link className="main-custom-link" to={`/workouts/show/${post.id}`}>
+                    <h1>{p.title}</h1>
+                  </Link>
+                </Col>
+                <Col xs="12" lg="4">
+                  <Image src={p.photoURL} className="navbar-photoURL mr-2" roundedCircle />
+                  <Card.Link className="main-custom-link" as={Link} to={`/profile/${p.userId}`}>
+                    {p.displayName}
+                  </Card.Link>
+                </Col>
               </Row>
               <Row>
-                <Image src={p.photoURL} className="navbar-photoURL" roundedCircle />
-                <Link to={`/profile/${p.userId}`}>
-                  <Card.Subtitle className="mb-4 text-muted">{p.displayName}</Card.Subtitle>
-                </Link>
+                <Col>
+                  <Card.Text className="mb-4">{p.desc}</Card.Text>
+                </Col>
+              </Row>
+              <Row className="mb-2">
+                <Col>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    {
+                      p.hashtags.map((hashtag) => (
+                        <Link className="main-custom-link" to={`/explore/2/${hashtag}`}>
+                          #{hashtag}&ensp;
+                        </Link>
+                      ))
+                    }
+                  </Card.Subtitle>
+                </Col>
               </Row>
               <Row>
-                <Card.Text className="mb-4">{p.desc}</Card.Text>
-              </Row>
-              <Row>
-                <Card.Subtitle className="mb-2 text-muted">
-                  {
-                    p.tagged.map((user) => (
-                      <Link to={`/profile/${user.userId}`}>
-                        @{user.displayName}
-                      </Link>
-                    ))
-                  }
-                </Card.Subtitle>
-              </Row>
-              <Row>
-                <Card.Subtitle className="mb-2 text-muted">
-                  {
-                    p.hashtags.map((hashtag) => (
-                      <Link to={`/explore/2/${hashtag}`}>
-                        #{hashtag}
-                      </Link>
-                    ))
-                  }
-                </Card.Subtitle>
+                <Col>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    {
+                      p.tagged.map((user) => (
+                        <Link className="main-custom-link" to={`/profile/${user.userId}`}>
+                          @{user.displayName}&ensp;
+                        </Link>
+                      ))
+                    }
+                  </Card.Subtitle>
+                </Col>
               </Row>
             </Card.Body>
             <Card.Footer>
-              <small className="mb-4 text-muted">
-                <Timestamp date={p.createdAt.toDate()}/>
+              <small className="mb-4 text-muted" >
+                {moment(p.createdAt.toDate()).format('LLLL')}
               </small>
             </Card.Footer>
           </Card>
@@ -189,20 +203,20 @@ const ShowUserResults = (props) => {
   const showResults = props.users.map((user) => {
     const u = user.data();
     return (
-      <Row key={user.id} md="12" className="d-flex justify-content-center mt-4">
-        <Col xs lg="2">
+      <Row key={user.id} className="d-flex justify-content-center mt-4">
+        <Col xs lg="4">
           <Image src={u.photoURL} roundedCircle alt="user profile image" className="profile-image"/>
         </Col>
-        <Col xs ls="4" className="justify-content-md-center">
-          <Link to={`/profile/${user.id}`} >
+        <Col xs lg="8" className="justify-content-md-center">
+          <Link className="main-custom-link" to={`/profile/${user.id}`} >
             <h3>{u.displayName}</h3>
           </Link>
           <Card.Subtitle className="mb-4 text-muted">{u.bio}</Card.Subtitle>
           <Row>
-            <Col xs="8" lg="2">
+            <Col xs="8" lg="4">
               <p>{u.followersCount} Followers</p>
             </Col>
-            <Col xs="8" lg="2">
+            <Col xs="8" lg="4">
               <p>{u.followingCount} Following</p>
             </Col>
             <Col xs="8" lg="2">

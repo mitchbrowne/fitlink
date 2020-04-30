@@ -55,3 +55,25 @@ code {
   text-decoration: none;
   color: #1F282D;
 }
+
+hr {
+  width: 75%;
+  size: 3;
+  color: black;
+}
+
+.margin-top-profile {
+  margin-top: 3em;
+}
+
+.margin-bottom-profile {
+  margin-bottom: 1.5em;
+}
+
+.loading-spinner-container {
+  margin-top: 4em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

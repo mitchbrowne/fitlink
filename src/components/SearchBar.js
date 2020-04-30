@@ -17,7 +17,7 @@ export default (props) => {
   const pageLoadTerm = _.sample(['#HIIT', '#20min', '#burn', '#sweat', '#30min', '#outdoor', '#balance']);
   const [placeholder, setPlaceholder] = useState(pageLoadTerm);
   const [searchValue, setSearchValue] = useState('');
-  const [searchType, setSearchType] = useState(props.searchType);
+  const [searchType, setSearchType] = useState(2);
 
   useEffect(() => {
     setSearchType(props.searchType);
@@ -60,42 +60,47 @@ export default (props) => {
   }
 
   return (
-    <Container>
-      <Form onSubmit={_handleSubmit}>
+    <Container className="justify-content-md-center">
+      <Row className="mb-4 d-flex justify-content-center">
         <Row className="justify-content-md-center">
-          <Col md="6">
-            <Form.Group>
-              <Form.Row>
-                <Form.Label column lg={2}>
-                  Search
-                </Form.Label>
-                <Col>
-                  {(searchType === 2)
-                    ? <InputTag handleHashtags={_handleHashtags} hashtags={searchValue}/>
-                    : <Form.Control type="search" value={searchValue} placeholder={placeholder} onChange={(e) => {setSearchValue(e.target.value)}}/>
-                  }
-                </Col>
-              </Form.Row>
-            </Form.Group>
+          <Col>
+            <h2>Explore</h2>
           </Col>
-          <Col md="0">
-            <Button variant="primary" type="submit">
-              Search
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-
-      <Row className="justify-content-md-center">
-        <Col md="4">
+        <Col md="6">
           <ToggleButtonGroup type="radio" name="options" defaultValue={searchType} aria-label="Buttons for search">
-            {/* <ToggleButton value={1} onClick={_handleToggle} variant="outline-secondary">Top</ToggleButton> */}
             <ToggleButton value={2} onClick={_handleToggle} variant="outline-secondary">Tags</ToggleButton>
-            {/* <ToggleButton value={3} onClick={_handleToggle} variant="outline-secondary">Categories</ToggleButton> */}
             <ToggleButton value={4} onClick={_handleToggle} variant="outline-secondary">Accounts</ToggleButton>
           </ToggleButtonGroup>
         </Col>
       </Row>
+      </Row>
+
+      <Row className="d-flex justify-content-center">
+        <Form className="w-75" onSubmit={_handleSubmit}>
+          <Row className="justify-content-md-center">
+            <Col md="6">
+              <Form.Group>
+                <Form.Row>
+                  <Col>
+                    {(searchType === 2)
+                      ? <InputTag handleHashtags={_handleHashtags} hashtags={searchValue}/>
+                      : <Form.Control type="search" value={searchValue} placeholder={placeholder} onChange={(e) => {setSearchValue(e.target.value)}}/>
+                    }
+                  </Col>
+                </Form.Row>
+              </Form.Group>
+            </Col>
+            <Col md="0">
+              <Button variant="primary" type="submit">
+                Search
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      </Row>
+
+
+
     </Container>
   )
 }
