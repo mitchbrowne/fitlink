@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { queryUsers, queryHashtags } from '../helpers/fireUtils';
+import { queryUsers, queryHashtags, queryUsersSelect } from '../helpers/fireUtils';
 import moment from 'moment';
 
 import SearchBar from '../components/SearchBar';
@@ -54,11 +54,25 @@ export default class Explore extends Component {
     }
 
     if (searchType === 4) {
+      if (searchValue === null) {
+        let userSearchResults = [];
+        this.setState({userSearchResults: userSearchResults});
+        return;
+      }
+      console.log(searchValue);
+      let newTagged = [];
+      const convertTaggedObjects = (searchValue) => {
+        searchValue.map((taggedObject) => {
+          const newObject = {userId: taggedObject.value, displayName: taggedObject.label};
+          newTagged.push(newObject);
+        });
+      }
+      convertTaggedObjects(searchValue);
       this.setState({searchLoading: true});
       this.setState({searchType: searchType});
-      this.setState({searchValue: searchValue});
-      if (searchValue.startsWith('@')) (searchValue = searchValue.slice(1));
-      const userSearchResults = await queryUsers(searchValue);
+      this.setState({searchValue: newTagged});
+      // if (searchValue.startsWith('@')) (searchValue = searchValue.slice(1));
+      const userSearchResults = await queryUsersSelect(newTagged);
       this.setState({userSearchResults: userSearchResults});
       this.setState({searchLoading: false});
     }

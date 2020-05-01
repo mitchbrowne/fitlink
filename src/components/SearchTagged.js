@@ -1,7 +1,7 @@
 import React, { Component, useState, useEffect, useRef } from 'react';
 import _ from 'underscore';
 import Select from 'react-select';
-import { getUsersFollowingSelect } from '../helpers/fireUtils';
+import { getAllUsersSelect } from '../helpers/fireUtils';
 
 import {
   Form,
@@ -10,14 +10,9 @@ import {
 } from 'react-bootstrap';
 
 export default (props) => {
+  const [loaded, setLoaded] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
-  const [searchList, setSearchList] = useState(
-    [
-      { value: 'chocolate', label: 'Chocolate' },
-      { value: 'strawberry', label: 'Strawberry' },
-      { value: 'vanilla', label: 'Vanilla' }
-    ]
-  );
+  const [searchList, setSearchList] = useState([]);
   const [placeholder, setPlaceholder] = useState('@');
   const [tagged, setTagged] = useState([]);
   const taggedInputRef = useRef();
@@ -48,16 +43,11 @@ export default (props) => {
   }
 
   useEffect(() => {
-    if (props.tagged !== '' && props.tagged !== null) {
-      console.log(Array.from(props.tagged));
-      let taggedData = Array.from(props.tagged);
-      setTagged(taggedData);
-    }
-
-    if (props.user !== null) {
-      getUsersFollowingSelect(props.user.userId).then((data) => {
+    if (props.user !== null && !loaded) {
+      getAllUsersSelect().then((data) => {
         console.log(data);
         setSearchList(data);
+        setLoaded(true)
       });
 
     }
@@ -65,6 +55,9 @@ export default (props) => {
   }, [props])
 
   const handleChange = (selectedOption) => {
+    // if (selectedOption === null) {
+    //   return;
+    // }
     console.log('Handled...');
     setSelectedOption(selectedOption);
     console.log(selectedOption);
