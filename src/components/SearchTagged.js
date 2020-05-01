@@ -55,9 +55,6 @@ export default (props) => {
   }, [props])
 
   const handleChange = (selectedOption) => {
-    // if (selectedOption === null) {
-    //   return;
-    // }
     console.log('Handled...');
     setSelectedOption(selectedOption);
     console.log(selectedOption);
