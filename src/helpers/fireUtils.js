@@ -254,6 +254,16 @@ export const queryUsers = async (searchValue) => {
   });
 }
 
+export const queryUsersSelect = async (searchValue) => {
+  const db = firebase.firestore();
+
+  const userRef = db.collection('users').doc(searchValue[0].userId);
+  return userRef.get().then((user) => {
+    console.log(user.data());
+    return [user];
+  })
+}
+
 export const queryHashtags = async (hashtagValues) => {
   if (hashtagValues.length === 0) return [];
 
@@ -634,6 +644,20 @@ export const getUsersFollowing = async (userSignedInId) => {
     console.log(followingUsers);
     return followingUsers;
   });
+}
+
+export const getAllUsersSelect = async () => {
+  const db = firebase.firestore();
+  const usersRef =db.collection('users');
+  let allUsers = [];
+
+  return await usersRef.get().then(users => {
+    users.forEach(user => {
+      let newSelect = {value: user.id, label: user.data().displayName}
+      allUsers.push(newSelect);
+    })
+    return allUsers;
+  })
 }
 
 export const getUsersFollowingSelect = async (userSignedInId) => {

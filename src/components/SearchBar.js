@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'underscore';
 import InputTag from './InputTag';
+import SearchTagged from './SearchTagged';
 
 import {
   Container,
@@ -53,6 +54,12 @@ export default (props) => {
     props.handleSearchSubmit(hashtagsData, searchType);
   }
 
+  const _handleTagged = (taggedData) => {
+    setSearchType(4)
+    setSearchValue(taggedData);
+    props.handleSearchSubmit(taggedData, searchType);
+  }
+
   const _handleSubmit = (e) => {
     e.preventDefault();
     console.log(searchValue);
@@ -84,7 +91,7 @@ export default (props) => {
                   <Col>
                     {(searchType === 2)
                       ? <InputTag handleHashtags={_handleHashtags} hashtags={searchValue}/>
-                      : <Form.Control type="search" value={searchValue} placeholder={placeholder} onChange={(e) => {setSearchValue(e.target.value)}}/>
+                      : <SearchTagged value={searchValue} placeholder={placeholder} user={props.user} handleTagged={_handleTagged}/>
                     }
                   </Col>
                 </Form.Row>

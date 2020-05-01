@@ -82,14 +82,3 @@ export default (props) => {
      />
   )
 }
-
-// return (
-//     <InputGroup>
-//       <InputGroup.Prepend>
-//         {tagged.map((tagged, i) => (
-//             <Button key={tagged} variant="outline-secondary" onClick={() => {_handleRemoveTagged(i)}}>@{tagged}</Button>
-//         ))}
-//       </InputGroup.Prepend>
-//       <Form.Control type="search" placeholder={placeholder} onKeyUp={_handleAddTagged} ref={taggedInputRef}/>
-//     </InputGroup>
-// )
